@@ -1,1 +1,1 @@
-# Diagnostic-Tool
+# Diagnostic Tool
