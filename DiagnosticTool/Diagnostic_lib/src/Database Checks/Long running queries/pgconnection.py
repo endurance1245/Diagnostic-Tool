@@ -2,44 +2,56 @@
 import psycopg2
 import sys
 
-class Pgconnection(Exception):
+class PgConnection(Exception):
 
     def __init__(self, logging, pgconnpram):
         self.longquery={}
+        self.logging = logging
+        self.myconn = "dbname=" + pgconnpram['dbconnname'] + " " + "user=" + pgconnpram['dbconnuser'] + " " + "host=" + pgconnpram['dbendpoint'] \
+                 + " " + "port=" + pgconnpram['dbconnport'] + " " + "password=" + pgconnpram['dbconnpass']
+
+    def connecttodb(self):
         # Try to connect
         try:
-            self.logging = logging
-            myconn = "dbname=" + pgconnpram['dbconnname'] + " " + "user=" + pgconnpram['dbconnuser'] + " " + "host=" + pgconnpram['dbendpoint'] \
-                     + " " + "port=" + pgconnpram['dbconnport'] + " " + "password=" + pgconnpram['dbconnpass']
-            self.conn = psycopg2.connect(myconn)
-
+            self.conn = psycopg2.connect(self.myconn)
         except StandardError:
-            logging.error("I am unable to connect to the database. {0}".format(sys.exc_info()))
-            exit(0)
+            self.logging.error("I am unable to connect to the database. {0}".format(sys.exc_info()))
+            return "Unable to connect to database"
 
     # Capturing long running query
     def longrunningquery(self):
+        #Connection to database
+        dbconnection=self.connecttodb()
+
+        #Below condition to help return in case we are unable to connect to database
+        if dbconnection == "Unable to connect to database":
+            return dbconnection
+        else:
+            pass
+
         try:
-            #query = "SELECT pid, now() - pg_stat_activity.query_start AS duration, left(query,50), state FROM pg_stat_activity " \
-            #        "WHERE (now() - pg_stat_activity.query_start) > interval '5 minutes' AND state != 'idle';"
-            query = "SELECT pid, now() - pg_stat_activity.query_start AS duration, left(query,50), state FROM pg_stat_activity " \
-                    "WHERE (now() - pg_stat_activity.query_start) > interval '5 minutes';"
+            query = "SELECT pid, now() - pg_stat_activity.query_start AS duration, left(query,100), state FROM pg_stat_activity " \
+                    "WHERE (now() - pg_stat_activity.query_start) < interval '5 minutes' AND query NOT LIKE 'CLOSE CUR%' AND" \
+                    " query NOT LIKE 'COMMIT';"
+            #query = "SELECT pid, now() - pg_stat_activity.query_start AS duration, left(query,100), state FROM pg_stat_activity " \
+            #        "WHERE (now() - pg_stat_activity.query_start) > interval '5 minutes' AND query NOT LIKE 'CLOSE CUR%' AND" \
+            #        " query NOT LIKE 'COMMIT' AND state != 'idle';"
             cur = self.conn.cursor()
             cur.execute(query)
             rows= cur.fetchall()
+
             for row in rows:
                 # Now append fetched result of pid:longquery into dict
                 self.longquery[row[0]] = row[2]
-
         except StandardError:
-            self.logging.error("I am unable to connect to the database. {0}".format(sys.exc_info()))
-            exit()
+            self.logging.error("I am unable to connect to the database table. {0}".format(sys.exc_info()))
+            return "UndefinedTable"
         except (Exception, psycopg2.Error) as error:
             self.logging.error("Error while fetching from PostgreSQL", error)
-            exit()
-        finally:
+            return "Error while fetching from PostgreSQL"
+        #Usecase for the else -clause is to perform actions that must occur when no exception occurs and that do not occur when exceptions are handled.
+        else:
             # Closing database connection.
             cur.close()
             self.conn.close()
-        #Returning here so that our cursor and connection are closed.
-        return self.longquery
+            return self.longquery

@@ -5,7 +5,7 @@ import newrelicconnection
 import logging
 
 
-class longquery(Exception):
+class LongQuery(Exception):
     def __init__(self,campaignhost,campaigninstance):
         self.campaignhost=campaignhost
         self.campaigninstance=campaigninstance
@@ -24,7 +24,7 @@ class longquery(Exception):
         self.longrunquery={}
 
     def connecttonewrelic(self):
-        self.longqueryexist=newrelicconnection.newrelic(self.campaignhost).newrelicfetchinfo()
+        self.longqueryexist=newrelicconnection.NewRelic(self.campaignhost).newrelicfetchinfo()
         if self.longqueryexist['longqueryexist'] == True:
             return self.fetchdbname_usingeval()
         elif self.longqueryexist['longqueryexist'] == False:
@@ -52,6 +52,6 @@ class longquery(Exception):
         self.pgconnpram['dbendpoint']=self.fetchenv['host']
         self.pgconnpram['dbconnpass']=self.fetchenv['password']
         self.pgconnpram['dbconnport']=str(self.dbconnport)
-        self.longrunquery['Final result'] = pgconnection.Pgconnection(logging, self.pgconnpram).longrunningquery()
+        self.longrunquery['Final result'] = pgconnection.PgConnection(logging, self.pgconnpram).longrunningquery()
         return self.longrunquery
 

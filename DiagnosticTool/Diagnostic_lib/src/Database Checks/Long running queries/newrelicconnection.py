@@ -1,7 +1,7 @@
 #!/usr/bin/python
 from nrql.api import NRQL
 
-class newrelic(Exception):
+class NewRelic(Exception):
     def __init__(self,campaignhost):
 
         self.campaignhost=campaignhost
