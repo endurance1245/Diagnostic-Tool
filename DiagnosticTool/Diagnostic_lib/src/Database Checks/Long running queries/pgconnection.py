@@ -30,15 +30,19 @@ class PgConnection(Exception):
             pass
 
         try:
+            #Testing using below query as >5 minutes queries were hard to find against test instance futureadvisor-rt-prod6-2
+            '''
             query = "SELECT pid, now() - pg_stat_activity.query_start AS duration, left(query,100), state FROM pg_stat_activity " \
                     "WHERE (now() - pg_stat_activity.query_start) < interval '5 minutes' AND query NOT LIKE 'CLOSE CUR%' AND" \
-                    " query NOT LIKE 'COMMIT';"
-            #query = "SELECT pid, now() - pg_stat_activity.query_start AS duration, left(query,100), state FROM pg_stat_activity " \
-            #        "WHERE (now() - pg_stat_activity.query_start) > interval '5 minutes' AND query NOT LIKE 'CLOSE CUR%' AND" \
-            #        " query NOT LIKE 'COMMIT' AND state != 'idle';"
+                    " query NOT LIKE 'COMMIT' AND query NOT LIKE '%GetDate() LIMIT 1 OFFSET%' AND query not like 'autovacuum%';"
+            '''
+
+            query = "SELECT pid, now() - pg_stat_activity.query_start AS duration, left(query,100), state FROM pg_stat_activity " \
+                    "WHERE (now() - pg_stat_activity.query_start) > interval '5 minutes' AND query NOT LIKE 'CLOSE CUR%' AND" \
+                    " query NOT LIKE 'COMMIT' AND query NOT LIKE '%GetDate() LIMIT 1 OFFSET%' AND query not like 'autovacuum%' AND state != 'idle';"
             cur = self.conn.cursor()
             cur.execute(query)
-            rows= cur.fetchall()
+            rows = cur.fetchall()
 
             for row in rows:
                 # Now append fetched result of pid:longquery into dict
@@ -49,7 +53,7 @@ class PgConnection(Exception):
         except (Exception, psycopg2.Error) as error:
             self.logging.error("Error while fetching from PostgreSQL", error)
             return "Error while fetching from PostgreSQL"
-        #Usecase for the else -clause is to perform actions that must occur when no exception occurs and that do not occur when exceptions are handled.
+        #Usecase for the else clause is to perform actions that must occur when no exception occurs and that do not occur when exceptions are handled.
         else:
             # Closing database connection.
             cur.close()

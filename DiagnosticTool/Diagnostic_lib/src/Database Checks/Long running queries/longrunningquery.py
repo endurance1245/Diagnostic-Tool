@@ -28,30 +28,51 @@ class LongQuery(Exception):
         if self.longqueryexist['longqueryexist'] == True:
             return self.fetchdbname_usingeval()
         elif self.longqueryexist['longqueryexist'] == False:
-            return "Please check as why there is no long query running during this point on the server"
+            self.longrunquery['Final result'] = "Please check as why there is no long query running during this point on the server"
+            return self.longrunquery
         elif self.longqueryexist['longqueryexist'] == 'unknown':
-            return "It seems newrelic doesn't have any data since an hour, please check if something is wrong"
+            self.longrunquery['Final result'] = "It seems newrelic doesn't have any data since an hour, please check if something is wrong e.g. newrelic agent stopped on DB machine"
+            return self.longrunquery
         elif self.longqueryexist['longqueryexist'] == 'incorrectapidetails':
-            return "It seems the API/account details for connecting to newrelic are incorrect"
-    #This method is used to fetch DB/instance/localhost name values, but it has shortcomings as we need db password as well which is not present in inventory
+            self.longrunquery['Final result'] = "It seems the API/account details for connecting to newrelic are incorrect"
+            return self.longrunquery
+
     def fetchdbname_usingeval(self):
         self.runenv=os.popen('eval `camp-db-params -e`;')
         self.fetchenv=os.popen('echo `camp-db-params`').read()
 
         #To convert a string to a dict apart from json.loads
         self.fetchenv=eval(self.fetchenv)
+
         if not bool(self.fetchenv):
-            return "It seems the environment variable for database isn't set"
-            #In this case we will fetch DB info using inventory and password using vault, code to be written
+            #return "It seems the camp-db-params for database isn't set"
+            #CASE 2 Try to fetch details via environment variables
+            return self.fetchdbname_usingenv()
         else:
+            # Setting DB credentials for connection
+            self.pgconnpram['dbconnname'] = self.fetchenv['dbname']
+            self.pgconnpram['dbconnuser'] = self.fetchenv['user']
+            self.pgconnpram['dbendpoint'] = self.fetchenv['host']
+            self.pgconnpram['dbconnpass'] = self.fetchenv['password']
+            self.pgconnpram['dbconnport'] = str(self.dbconnport)
+            return self.connecttodb()
+
+    def fetchdbname_usingenv(self):
+        self.osenv = os.environ
+        if not bool(self.osenv):
+            return "It seems neither camp-db-params nor the environment variable for database is set"
+
+            #CASE 3 try to fetch DB info using inventory and password using vault, code to be written
+        else:
+            # Setting DB credentials for connection
+            self.pgconnpram['dbconnname'] = self.osenv['PGDATABASE']
+            self.pgconnpram['dbconnuser'] = self.osenv['PGUSER']
+            self.pgconnpram['dbendpoint'] = self.osenv['PGHOST']
+            self.pgconnpram['dbconnpass'] = self.osenv['PGPASSWORD']
+            self.pgconnpram['dbconnport'] = str(self.dbconnport)
             return self.connecttodb()
 
     def connecttodb(self):
-        self.pgconnpram['dbconnname']=self.fetchenv['dbname']
-        self.pgconnpram['dbconnuser']=self.fetchenv['user']
-        self.pgconnpram['dbendpoint']=self.fetchenv['host']
-        self.pgconnpram['dbconnpass']=self.fetchenv['password']
-        self.pgconnpram['dbconnport']=str(self.dbconnport)
         self.longrunquery['Final result'] = pgconnection.PgConnection(logging, self.pgconnpram).longrunningquery()
         return self.longrunquery
 
