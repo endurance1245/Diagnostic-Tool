@@ -1,4 +1,5 @@
 How to run the script using salt module?
+
 root@salt-syndic-1:~# salt 'futureadvisor-rt-prod6-2' longqueryfuncwrapper.callablefunc futureadvisor-rt-prod6-1 futureadvisor_rt_prod6
 futureadvisor-rt-prod6-2:
     ----------
@@ -10,6 +11,7 @@ futureadvisor-rt-prod6-2:
             INSERT INTO XtkWorkflowLog (iWorkflowLogId, iWorkf
 
 To run the script locally:-
+
 First remove the comments in file longqueryfuncwrapper.py and then run as below:-
 root@futureadvisor-rt-prod6-2:/var/cache/salt/minion/extmods/modules# python longqueryfuncwrapper.py futureadvisor-rt-prod6-1 futureadvisor_rt_prod6
 {2282: 'INSERT INTO XtkWorkflowLog (iWorkflowLogId, iWorkf', 2283: 'INSERT INTO XtkWorkflowLog (iWorkflowLogId, iWorkf'}
