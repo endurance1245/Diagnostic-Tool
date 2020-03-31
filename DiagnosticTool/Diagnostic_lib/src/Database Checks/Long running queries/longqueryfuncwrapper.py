@@ -1,5 +1,7 @@
 #!/usr/bin/python
 import longrunningquery
+import sys
+import logging
 
 def callablefunc(campaignhost, campaigninstance):
     longrunningqueryresult=longrunningquery.LongQuery(campaignhost, campaigninstance).connecttonewrelic()
@@ -39,6 +41,7 @@ def callablefunc(campaignhost, campaigninstance):
         print(longrunningqueryresult)
         return longrunningqueryresult
 
+'''
 #To test function locally:-
 def main():
     import sys
@@ -53,3 +56,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+'''

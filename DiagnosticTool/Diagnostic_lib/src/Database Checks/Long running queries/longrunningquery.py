@@ -5,7 +5,7 @@ import newrelicconnection
 import logging
 
 
-class LongQuery(Exception):
+class LongQuery():
     def __init__(self,campaignhost,campaigninstance):
         self.campaignhost=campaignhost
         self.campaigninstance=campaigninstance

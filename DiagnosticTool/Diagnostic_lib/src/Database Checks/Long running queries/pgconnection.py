@@ -21,6 +21,8 @@ class PgConnection(Exception):
     # Capturing long running query
     def longrunningquery(self):
         #Connection to database
+
+
         dbconnection=self.connecttodb()
 
         #Below condition to help return in case we are unable to connect to database
