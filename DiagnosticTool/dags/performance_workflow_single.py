@@ -3,7 +3,7 @@ import airflow
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
 from airflow.operators import SaltOperator
-from dags.dag_constants import (DEFAULT_EXECUTION_TIMEOUT, DEFAULT_RETRIES, 
+from dags.constants import (DEFAULT_EXECUTION_TIMEOUT, DEFAULT_RETRIES, 
                                     DEFAULT_RETRY_DELAY, DEFAULT_START_DATE)
 
 #arguments
