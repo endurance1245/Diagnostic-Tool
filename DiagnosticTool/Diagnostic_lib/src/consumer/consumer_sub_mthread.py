@@ -51,6 +51,7 @@ class SaltConsumer():
                     else:
                         # Deleting the message from queue once processed
                         self.client.delete_message(QueueUrl=queue_url, ReceiptHandle=message['ReceiptHandle'])
+                        self.sendemptyresponsetodynamo()
             else:
                 time.sleep(5)
                 print("The queue is empty")
@@ -64,3 +65,5 @@ class SaltConsumer():
         local = salt.client.LocalClient()
         output = local.cmd_async(instanceid, module, [airflowproduce, saltconsumesqs, str(datetime.datetime.utcnow())], jid=runid, ret='test_timestamp')
         return output
+
+    def sendemptyresponsetodynamo(self):
