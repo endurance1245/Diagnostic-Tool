@@ -75,4 +75,3 @@ class LongQuery():
     def connecttodb(self):
         self.longrunquery['Final result'] = pgconnection.PgConnection(logging, self.pgconnpram).longrunningquery()
         return self.longrunquery
-

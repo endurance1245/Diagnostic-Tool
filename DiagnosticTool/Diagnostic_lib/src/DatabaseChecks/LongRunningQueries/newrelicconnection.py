@@ -29,7 +29,7 @@ class NewRelic(Exception):
             self.inspectedcount = self.reqvariable['totalResult']['total']['inspectedCount']
 
             #Getting long query results in minutes format from newrelic
-            self.longquery = self.reqvariable['facets'][0]['total']['results'][0]['result']
+            self.longquery = self.reqvariable['totalResult']['total']['results'][0]['result']
 
         except Exception as e:
             #Below is applicable for incorrect API key/account id/incorrect newrelic query , print("Exception", e)
@@ -39,7 +39,7 @@ class NewRelic(Exception):
         #Check how many events are there in last 5 minutes, which must be 5 as newrelic is capturing data every 5minutes as well from postgres.
         #Check for last one hour no of estimated events check for seeing if we are getting data from newrelic.
         if self.inspectedcountsince1hour == 0 and self.longquery == 0.0:
-            self.longqueryexist['longqueryexist'] = 'Unknown'
+            self.longqueryexist['longqueryexist'] = 'unknown'
         elif self.inspectedcount >= 1:
             if self.longquery > 5:
                 self.longqueryexist['longqueryexist'] = True
