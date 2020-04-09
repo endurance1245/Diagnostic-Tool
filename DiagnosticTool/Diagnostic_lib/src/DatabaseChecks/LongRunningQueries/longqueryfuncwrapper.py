@@ -1,10 +1,10 @@
 #!/usr/bin/python
-import longrunningquery
+from DatabaseChecks.LongRunningQueries.longrunningquery import LongQuery
 import sys
 import logging
 
 def callablefunc(campaignhost, campaigninstance):
-    longrunningqueryresult=longrunningquery.LongQuery(campaignhost, campaigninstance).connecttonewrelic()
+    longrunningqueryresult=LongQuery(campaignhost, campaigninstance).connecttonewrelic()
     if not bool(longrunningqueryresult):
         print("Please check if any postgres query is running for more than 5 minutes")
         return "Please check if any postgres query is running for more than 5 minutes"
