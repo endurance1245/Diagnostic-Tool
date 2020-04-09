@@ -30,7 +30,6 @@ class NewRelic(Exception):
 
             #Getting long query results in minutes format from newrelic
             self.longquery = self.reqvariable['totalResult']['total']['results'][0]['result']
-
         except Exception as e:
             #Below is applicable for incorrect API key/account id/incorrect newrelic query , print("Exception", e)
             self.longqueryexist['longqueryexist'] = 'incorrectnewrelicinfo'
