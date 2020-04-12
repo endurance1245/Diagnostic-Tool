@@ -5,24 +5,25 @@ import salt.client
 import time
 import datetime
 import subprocess
+import boto.utils
 
 
 class SaltConsumer():
     def __init__(self):
-        #Specify region from which message need to be consumed based on region in which saltmaster is in
-        os.environ['AWS_DEFAULT_REGION'] = 'us-west-2'
-        # create a boto3 client
+        #Specify region from which message need to be consumed based on region in which saltmaster is in, below code is for calculating region automatically
+        data = boto.utils.get_instance_identity()
+        self.region_name = data['document']['region']
+        os.environ['AWS_DEFAULT_REGION'] = self.region_name
+
+        # Fetch SQS queue name
         self.client = boto3.client('sqs')
-        self.queuename='diag_saltmaster_us-west-2'
+        self.queues = self.client.list_queues(QueueNamePrefix='diag_saltmaster')
+        self.queue_url = self.queues['QueueUrls'][0]
         self.maxbatchmessages=3
 
     def consumefrom(self):
-        # get a list of queues, we get back a dict with 'QueueUrls' as a key with a list of queue URLs
-        queues = self.client.list_queues(QueueNamePrefix=self.queuename)
-        queue_url = queues['QueueUrls'][0]
-
         while True:
-            messages = self.client.receive_message(QueueUrl=queue_url,
+            messages = self.client.receive_message(QueueUrl=self.queue_url,
                                           MaxNumberOfMessages = self.maxbatchmessages)  # adjust MaxNumberOfMessages if needed
             if 'Messages' in messages:  # when the queue is exhausted, the response dict contains no 'Messages' key
                 for message in messages['Messages']:  # 'Messages' is a list
@@ -43,7 +44,7 @@ class SaltConsumer():
                     #Below condition is to first check if particular minion is added to particular saltmaster, in case of salt minion not part of saltmaster key we would get result as ('', None)
                     if saltkeyexist[0] == '':
                         # Deleting the message from queue as this instanceid doesn't belong to this saltmaster
-                        self.client.delete_message(QueueUrl=queue_url, ReceiptHandle=message['ReceiptHandle'])
+                        self.client.delete_message(QueueUrl=self.queue_url, ReceiptHandle=message['ReceiptHandle'])
                     else:
                         #Fetch the campaign host ID and check for minion state
                         saltpingresult=self.saltping(messagedict['instanceid'])
@@ -53,7 +54,7 @@ class SaltConsumer():
                             output="There is some issue with salt minion, please check if its working fine."
                             self.sendemptyresponsetodynamo(messagedict['run_id'],messagedict['instanceid'],output)
                             # Deleting the message from queue once processed
-                            self.client.delete_message(QueueUrl=queue_url, ReceiptHandle=message['ReceiptHandle'])
+                            self.client.delete_message(QueueUrl=self.queue_url, ReceiptHandle=message['ReceiptHandle'])
 
                         elif saltpingresult[messagedict['instanceid']]==True:
                             #Sending salt async command to minion
@@ -61,7 +62,7 @@ class SaltConsumer():
                                                          messagedict['run_id'],messagedict['airflowproducingtime'],
                                                          messagedict['saltconsumingfromsqstime'])
                             # Deleting the message from queue once processed
-                            self.client.delete_message(QueueUrl=queue_url, ReceiptHandle=message['ReceiptHandle'])
+                            self.client.delete_message(QueueUrl=self.queue_url, ReceiptHandle=message['ReceiptHandle'])
             else:
                 time.sleep(5)
                 print("The queue is empty")
