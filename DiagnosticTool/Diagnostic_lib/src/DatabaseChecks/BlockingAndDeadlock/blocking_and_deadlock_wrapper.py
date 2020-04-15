@@ -3,7 +3,7 @@ import sys
 import json
 
 #function to invoke from salt
-def blocking_and_deadlock_caller(instance_name):
+def blocking_and_deadlock_caller(airflowproducingtime, saltconsumingfromsqstime, saltrunningasynccommand, instance_name):
     if instance_name == None:
         return {"error": "Instance Name Not Found"}
     blocking_and_deadlock_obj = BlockingDeadlock(instance_name)
@@ -13,8 +13,6 @@ def blocking_and_deadlock_caller(instance_name):
     output = blocking_and_deadlock_obj.get_deadlock_queries()
     blocking_and_deadlock["Deadlock Result"] = output
     blocking_and_deadlock = json.dumps(blocking_and_deadlock)
-    print("Final result")
-    print(blocking_and_deadlock)
     return blocking_and_deadlock
 
 
