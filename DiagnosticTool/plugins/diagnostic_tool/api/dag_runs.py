@@ -3,7 +3,8 @@ from flask_api import status
 from airflow.models import DagRun, XCom
 from airflow.exceptions import AirflowException
 import logging
-import ast 
+import ast
+import json
 from airflow.utils import timezone
 from diagnostic_tool.utils import check_and_get_task, check_and_get_taskrun
 
@@ -32,9 +33,14 @@ def get_task_runs(task_id, state=None):
         for r in res:
             re = {}
             try:
-                re = ast.literal_eval(r.value) #convert res to dict
+                re = json.loads(r.value) #convert res to dict
             except Exception:
-                log.error("Output not found corresponding to check " + r.task_id + " OR Output can't be parsed into JSON")
+                if "not" in str(r.value):
+                    err = "Output not available for " + r.task_id
+                else:
+                    err = "Output can't be parsed into JSON for " + r.task_id
+                log.error(err)
+                re['error'] = err
             result[r.task_id] = re  
         task_runs.append({
             'id': run.id,
@@ -88,9 +94,14 @@ def get_task_run(task_id, execution_date):
     for r in result:
         res = {}
         try:
-            res = ast.literal_eval(r.value) #convert res to dict
+            res = json.loads(r.value) #convert res to dict
         except Exception:
-            log.error("Output not found corresponding to check " + r.task_id + " OR Output can't be parsed into JSON")
+            if "not" in r.value:
+                err = "Output not available for " + r.task_id
+            else:
+                err = "Output can't be parsed into JSON for " + r.task_id
+            log.error(err)
+            res['error'] = err
         output[r.task_id] = res
     return {
         'state': taskrun.get_state(),

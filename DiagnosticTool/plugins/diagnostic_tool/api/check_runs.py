@@ -2,7 +2,7 @@ from flask import jsonify, Blueprint, request, make_response
 from airflow.models import DagRun, XCom
 from airflow.exceptions import AirflowException
 import logging
-import ast 
+import json
 from airflow.utils import timezone
 from flask_api import status
 from diagnostic_tool.exceptions import CheckInstanceNotFoundException
@@ -60,10 +60,14 @@ def check(task_id, execution_date, check_id):
             }
     check_result_json = {}
     try:
-        check_result_json = ast.literal_eval(check_result) #convert res to dict
+        check_result_json = json.loads(check_result) #convert res to dict
     except Exception:
-        log.error("Output not found corresponding to check " + check_id + " OR Output can't be parsed into JSON")
-            
+        if "not" in r.value:
+            err = "Output not available for " + check_id
+        else:
+            err = "Output can't be parsed into JSON for " + check_id
+        log.error(err)
+        check_result_json['error'] = err         
     json_result['output'] = check_result_json
     return make_response(jsonify(json_result), status.HTTP_200_OK)
 
