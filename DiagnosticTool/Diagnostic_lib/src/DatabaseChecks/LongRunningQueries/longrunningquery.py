@@ -36,6 +36,9 @@ class LongQuery():
         elif self.longqueryexist['longqueryexist'] == 'incorrectapidetails':
             self.longrunquery['Final result'] = "It seems the API/account details for connecting to newrelic are incorrect"
             return self.longrunquery
+        elif self.longqueryexist['longqueryexist'] == 'Unknown exception please check':
+            self.longrunquery['Final result'] = "It seems there's an unknown exception please check newrelic results for long query"
+            return self.longrunquery
 
     def fetchdbname_usingeval(self):
         self.runenv=os.popen('eval `camp-db-params -e`;')

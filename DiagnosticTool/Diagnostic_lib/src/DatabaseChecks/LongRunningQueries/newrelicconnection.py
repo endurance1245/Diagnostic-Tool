@@ -37,11 +37,16 @@ class NewRelic(Exception):
 
         #Check how many events are there in last 5 minutes, which must be 5 as newrelic is capturing data every 5minutes as well from postgres.
         #Check for last one hour no of estimated events check for seeing if we are getting data from newrelic.
-        if self.inspectedcountsince1hour == 0 and self.longquery == 0.0:
+        if (self.inspectedcountsince1hour == 0 and self.longquery == 0.0) or \
+                (self.inspectedcountsince1hour == 0 and self.longquery is None):
             self.longqueryexist['longqueryexist'] = 'unknown'
+            return self.longqueryexist
         elif self.inspectedcount >= 1:
             if self.longquery > 5:
                 self.longqueryexist['longqueryexist'] = True
+                return self.longqueryexist
             else:
                 self.longqueryexist['longqueryexist'] = False
+                return self.longqueryexist
+        self.longqueryexist['longqueryexist']="Unknown exception please check"
         return self.longqueryexist

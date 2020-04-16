@@ -36,6 +36,9 @@ def callablefunc(campaignhost, campaigninstance):
     elif longrunningqueryresult['Final result'] == "It seems the API/account details for connecting to newrelic are incorrect":
         print("It seems the API/account details for connecting to newrelic are incorrect")
         return "It seems the API/account details for connecting to newrelic are incorrect"
+    elif longrunningqueryresult['Final result'] == "It seems there's an unknown exception please check newrelic results for long query":
+        print("It seems there's an unknown exception please check newrelic results for long query")
+        return("It seems there's an unknown exception please check newrelic results for long query")
 
     else:
         print(longrunningqueryresult)
