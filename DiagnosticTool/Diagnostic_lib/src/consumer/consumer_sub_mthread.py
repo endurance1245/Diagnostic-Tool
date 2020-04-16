@@ -81,7 +81,7 @@ class SaltConsumer():
 
     def saltcommand(self,instanceid,module,runid,airflowproduce,saltconsumesqs):
         local = salt.client.LocalClient()
-        output = local.cmd_async(instanceid, module, [airflowproduce, saltconsumesqs, str(datetime.datetime.utcnow())], jid=runid, ret='test_timestamp')
+        output = local.cmd_async(instanceid, module, [airflowproduce, saltconsumesqs, str(datetime.datetime.utcnow()), instanceid], jid=runid, ret='test_timestamp')
         return output
 
     def sendemptyresponsetodynamo(self,messageid,instanceid,output):
