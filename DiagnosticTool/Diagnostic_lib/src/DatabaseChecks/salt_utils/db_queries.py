@@ -21,3 +21,14 @@ db_query_for_blocking = "SELECT blocked_locks.pid AS blocked_pid, " \
 db_query_for_deadlock_count = "SELECT deadlocks, datname FROM pg_stat_database WHERE datname = current_database();"
 db_query_for_acquired_lock_modes = "SELECT virtualtransaction, relation::regclass, locktype, page, " \
                         "tuple, mode, granted, transactionid FROM pg_locks ORDER BY granted, virtualtransaction;"
+db_query_for_long_running = "SELECT pid, now() - pg_stat_activity.query_start AS duration, left(query,100), state " \
+                            "FROM pg_stat_activity WHERE (now() - pg_stat_activity.query_start) > interval '5 " \
+                            "minutes' AND query NOT LIKE 'CLOSE CUR%' AND query NOT LIKE 'COMMIT' AND query NOT " \
+                            "LIKE '%GetDate() LIMIT 1 OFFSET%' AND query not like 'autovacuum%' AND state != 'idle';"
+
+#Testing using below query as >5 minutes queries were hard to find against test instance futureadvisor-rt-prod6-2
+db_query_for_long_running_testing = "SELECT pid, now() - pg_stat_activity.query_start AS duration, left(query,100), " \
+                                    "state FROM pg_stat_activity WHERE (now() - pg_stat_activity.query_start) < " \
+                                    "interval '5 minutes' AND query NOT LIKE 'CLOSE CUR%' AND query NOT LIKE " \
+                                    "'COMMIT' AND query NOT LIKE '%GetDate() LIMIT 1 OFFSET%' AND query not " \
+                                    "like 'autovacuum%';"

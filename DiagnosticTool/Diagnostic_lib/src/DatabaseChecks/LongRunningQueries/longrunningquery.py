@@ -6,13 +6,15 @@ import logging
 
 
 class LongQuery():
-    def __init__(self,campaignhost,campaigninstance):
+    def __init__(self,campaignhost):
         self.campaignhost=campaignhost
-        self.campaigninstance=campaigninstance
 
         #API to query inventory
         self.api_key='c1fda300-2a62-4221-8036-0082edbdab4f'
-        self.url = "https://us-east-1-483013340174-inventory-dev.camp-infra.adobe.net/instances/"+self.campaigninstance
+
+        #Need to explore this later
+        # self.campaigninstance=campaigninstanc
+        #self.url = "https://us-east-1-483013340174-inventory-dev.camp-infra.adobe.net/instances/"+self.campaigninstance
 
         #Dict to save details of credentials to connect to database
         self.pgconnpram = {}
