@@ -32,3 +32,14 @@ db_query_for_long_running_testing = "SELECT pid, now() - pg_stat_activity.query_
                                     "interval '5 minutes' AND query NOT LIKE 'CLOSE CUR%' AND query NOT LIKE " \
                                     "'COMMIT' AND query NOT LIKE '%GetDate() LIMIT 1 OFFSET%' AND query not " \
                                     "like 'autovacuum%';"
+
+
+
+db_query_for_running_state = "SELECT pid, now() - pg_stat_activity.query_start AS duration, left(query,100), state FROM pg_stat_activity " \
+                    "WHERE (now() - pg_stat_activity.query_start) > interval '5 minutes' AND query NOT LIKE 'CLOSE CUR%' AND" \
+                    " query NOT LIKE 'COMMIT' AND query NOT LIKE '%GetDate() LIMIT 1 OFFSET%' AND query not like 'autovacuum%' AND state != 'idle';"
+
+
+db_query_for_idle_state ="SELECT pid, now() - pg_stat_activity.query_start AS duration, left(query,100), state FROM pg_stat_activity " \
+                    "WHERE (now() - pg_stat_activity.query_start) > interval '720 minutes' AND query NOT LIKE '%GetDate() LIMIT 1 OFFSET%'" \
+                    "AND state = 'idle';"
