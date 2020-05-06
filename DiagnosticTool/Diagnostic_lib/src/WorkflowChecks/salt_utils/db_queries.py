@@ -49,4 +49,5 @@ db_query_for_workflow_id = "select iworkflowid, sinternalname, slabel from xtkwo
 
 
 db_query_for_workflow_status ="select pid, state,  datname, now() - pg_stat_activity.query_start AS duration, left(query,100) " \
-                              "from pg_stat_activity WHERE query LIKE '%{}%' AND query NOT LIKE '%WHERE query LIKE '{}'%' ORDER BY duration DESC LIMIT 10;"    
+                              "from pg_stat_activity WHERE query LIKE '%{}%' AND query NOT LIKE '%select pid, state,  datname,"\
+                              "now() - pg_stat_activity.query_start AS duration, left(query,100) from%' ORDER BY duration DESC LIMIT 10;"    

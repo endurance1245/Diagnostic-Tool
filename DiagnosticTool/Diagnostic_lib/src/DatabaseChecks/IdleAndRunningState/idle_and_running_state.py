@@ -72,12 +72,12 @@ class IdleRunningState:
                     r = self.make_result_for_idle(row)
                     result_rows.append(r)
                 result["Idle Queries"] = result_rows
-        return result
+        git return result
 
     def make_result_for_running(self, row):
         result = {}
         result["running_pid"] = row[0]
-        result["running_duration"] = row[1]
+        result["running_duration"] = str(row[1])
         result["running_query"] = row[2]
         return result
 
@@ -85,7 +85,7 @@ class IdleRunningState:
         result = {}
         result = {}
         result["idle_pid"] = row[0]
-        result["idle_duration"] = row[1]
+        result["idle_duration"] = str(row[1])
         result["idle_query"] = row[1]
         return result
 
