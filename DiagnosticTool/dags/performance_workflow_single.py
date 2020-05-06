@@ -73,6 +73,16 @@ opr_count_pid = SaltOperator(
     dag = performance_workflow_single_dag,
 )
 
+#Check workflow status if internal is given
+opr_workflow_status = SaltOperator(
+    task_id='check_workflow_satus',
+    module_name='workflow_status_wrapper.workflow_status_caller', #to invoke the function of workflow status
+    provide_context = True,
+    execution_timeout = DEFAULT_EXECUTION_TIMEOUT,
+    retries = DEFAULT_RETRIES,
+    retry_delay = DEFAULT_RETRY_DELAY,
+    dag = performance_workflow_single_dag,
+)
 #dependencies
 opr_check_memory_usage
 opr_check_swap_usage
