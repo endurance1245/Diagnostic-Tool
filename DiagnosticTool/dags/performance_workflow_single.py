@@ -89,3 +89,4 @@ opr_check_swap_usage
 opr_check_mta
 opr_check_cpu
 opr_count_pid
+opr_workflow_status
