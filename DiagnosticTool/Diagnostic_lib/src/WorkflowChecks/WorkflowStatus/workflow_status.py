@@ -1,5 +1,5 @@
 import logging
-import json
+
 from campaign_db_connection import PgConnection
 from db_parameters import DbParameters
 from database_exceptions import DBParameterNotFoundException, DataBaseException
