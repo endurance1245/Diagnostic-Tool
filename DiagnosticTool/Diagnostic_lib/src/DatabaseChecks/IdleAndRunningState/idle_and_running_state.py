@@ -1,7 +1,5 @@
 import logging
-import os
-import json
-import subprocess
+
 from campaign_db_connection import PgConnection
 from db_parameters import DbParameters
 from database_exceptions import DBParameterNotFoundException, DataBaseException
@@ -80,6 +78,3 @@ class IdleRunningState:
         result["duration"] = str(row[1])
         result["query"] = row[2]
         return result
-
-
-    
