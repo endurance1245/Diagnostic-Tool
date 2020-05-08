@@ -38,7 +38,7 @@ class IdleRunningState:
             else:
                 result_rows = []
                 for row in db_query_result:
-                    r = self.make_result_for_runnning(row)
+                    r = self.make_result(row)
                     result_rows.append(r)
                 result["Running Queries"] = result_rows
         return result
@@ -69,24 +69,16 @@ class IdleRunningState:
             else:
                 result_rows = []
                 for row in db_query_result:
-                    r = self.make_result_for_idle(row)
+                    r = self.make_result(row)
                     result_rows.append(r)
                 result["Idle Queries"] = result_rows
         git return result
 
-    def make_result_for_running(self, row):
+    def make_result(self, row):
         result = {}
-        result["running_pid"] = row[0]
-        result["running_duration"] = str(row[1])
-        result["running_query"] = row[2]
-        return result
-
-    def make_result_for_idle(self, row):
-        result = {}
-        result = {}
-        result["idle_pid"] = row[0]
-        result["idle_duration"] = str(row[1])
-        result["idle_query"] = row[1]
+        result["pid"] = row[0]
+        result["duration"] = str(row[1])
+        result["query"] = row[2]
         return result
 
 
