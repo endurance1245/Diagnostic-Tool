@@ -86,7 +86,7 @@ opr_workflow_status = SaltOperator(
 
 #Check  dailyworkflow status if internal is given
 opr_workflow_daily_service = SaltOperator(
-    task_id='check_workflow_satus',
+    task_id='check_workflow_daily_service',
     module_name='workflow_daily_service_wrapper.workflow_daily_service_caller', #to invoke the function of workflow status
     provide_context = True,
     execution_timeout = DEFAULT_EXECUTION_TIMEOUT,
