@@ -83,6 +83,17 @@ opr_workflow_status = SaltOperator(
     retry_delay = DEFAULT_RETRY_DELAY,
     dag = performance_workflow_single_dag,
 )
+
+#Check  dailyworkflow status if internal is given
+opr_workflow_daily_service = SaltOperator(
+    task_id='check_workflow_satus',
+    module_name='workflow_daily_service_wrapper.workflow_daily_service_caller', #to invoke the function of workflow status
+    provide_context = True,
+    execution_timeout = DEFAULT_EXECUTION_TIMEOUT,
+    retries = DEFAULT_RETRIES,
+    retry_delay = DEFAULT_RETRY_DELAY,
+    dag = performance_workflow_single_dag,
+)
 #dependencies
 opr_check_memory_usage
 opr_check_swap_usage
@@ -90,3 +101,4 @@ opr_check_mta
 opr_check_cpu
 opr_count_pid
 opr_workflow_status
+opr_workflow_daily_service
