@@ -9,8 +9,8 @@ def callablefunc(*argv):
 
     longrunningqueryresult = LongQuery(campaignhost).connecttonewrelic()
     if not bool(longrunningqueryresult):
-        print("Please check if any postgres query is running for more than 5 minutes")
-        return json.dumps({"Final result":"Please check if any postgres query is running for more than 5 minutes"})
+        print("Please check if any postgres query is running for more than 1 hour")
+        return json.dumps({"Final result":"Please check if any postgres query is running for more than 1 hour"})
 
     elif longrunningqueryresult['Final result'] == 'Unable to connect to database':
         print("Unable to connect to database due to /Wrong DB name/DB-Table name doesn't exist")

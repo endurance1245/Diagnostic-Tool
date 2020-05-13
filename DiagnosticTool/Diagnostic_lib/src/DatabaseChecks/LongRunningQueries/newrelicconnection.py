@@ -12,14 +12,15 @@ class NewRelic(Exception):
 
 
     def newrelicfetchinfo(self):
-        # Fetch info from newrelic for last 5minutes and query in minute format
-        queryInsights = "from Postgres select average(oldest_query) /60  as long_query " \
-                         "where queryName = 'PG_OLDEST_QUERY_AND_TRANSACTION' and hostname " \
-                         "like '%" + self.campaignhost + "%' facet hostname TIMESERIES 5 minutes since 5 minutes ago"
+        # Fetch info from newrelic for last 5minutes and query in hour format
+        queryInsights = "SELECT latest(query_duration_in_seconds)/3600  AS duration_hours FROM Postgres " \
+                        "WHERE queryName = 'PG_OLDEST_QUERY_AND_TRANSACTION' AND hostname " \
+                        "LIKE '%" + self.campaignhost + "%' FACET hostname TIMESERIES 5 minutes since 5 minutes ago"
 
-        queryInsightsfor1hour = "from Postgres select average(oldest_query) /60  as long_query " \
-                         "where queryName = 'PG_OLDEST_QUERY_AND_TRANSACTION' and hostname " \
-                         "like '%" + self.campaignhost + "%' facet hostname TIMESERIES 5 minutes since 60 minutes ago"
+        queryInsightsfor1hour = "SELECT latest(query_duration_in_seconds)/3600  AS duration_hours FROM Postgres " \
+                                "WHERE queryName = 'PG_OLDEST_QUERY_AND_TRANSACTION' AND hostname " \
+                                "LIKE '%" + self.campaignhost + "%' FACET hostname TIMESERIES 5 minutes " \
+                                                                "since 60 minutes ago"
 
         # Exception handling for incorrect NewRelic API key or account ID
         try:
@@ -42,7 +43,7 @@ class NewRelic(Exception):
             self.longqueryexist['longqueryexist'] = 'unknown'
             return self.longqueryexist
         elif self.inspectedcount >= 1:
-            if self.longquery > 5:
+            if self.longquery > 1:
                 self.longqueryexist['longqueryexist'] = True
                 return self.longqueryexist
             else:
