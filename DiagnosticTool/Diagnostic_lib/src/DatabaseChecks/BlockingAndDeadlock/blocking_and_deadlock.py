@@ -1,9 +1,7 @@
 import logging
-import os
 import json
-import subprocess
-import ast
 from campaign_db_connection import PgConnection
+from db_parameters import DbParameters
 from newrelic_connection import NewRelicInsight
 from database_exceptions import DBParameterNotFoundException, DataBaseException
 from db_queries import db_query_for_max_connection, db_query_for_blocking, db_query_for_deadlock_count, db_query_for_acquired_lock_modes
@@ -11,13 +9,12 @@ from db_queries import db_query_for_max_connection, db_query_for_blocking, db_qu
 class BlockingDeadlock:
 
     def __init__(self, campaign_host):
-
         self.campaign_host = campaign_host
-        self.db_connection_port = "5432"
     
     def get_blocking_queries(self):
         try:
-            params = self.get_db_parameters()
+            params_obj = DbParameters()
+            params = params_obj.get_db_parameters()
         except DBParameterNotFoundException as err:
             logging.error(err)
             error_message = dict()
@@ -60,7 +57,8 @@ class BlockingDeadlock:
 
     def get_deadlock_queries(self):
         try:
-            params = self.get_db_parameters()
+            params_obj = DbParameters()
+            params = params_obj.get_db_parameters()
         except DBParameterNotFoundException as err:
             logging.error(err)
             error_message = dict()
@@ -99,70 +97,6 @@ class BlockingDeadlock:
                     result_rows.append(r)
                 result["Modes of Acquired Locks"] = result_rows
         return result
-
-    def get_db_parameters(self):
-        pgconnpram = {}
-        output = subprocess.check_output('eval `camp-db-params -e`;', shell=True)
-        params = str(subprocess.check_output('echo `camp-db-params`', shell=True))
-        if params is None or params == "\n":
-            try:
-                parameters = self.get_db_parameters_using_env()
-            except DBParameterNotFoundException as err:
-                logging.error(err)
-                error_message = dict()
-                error_message["error"] = str(err)
-                return error_message
-        else:
-            try:
-                params = ast.literal_eval(params)
-            except ValueError as err:
-                logging.error(err)
-                error_message = dict()
-                error_message["error"] = str(err)
-                return error_message
-            if "dbname" not in params:
-                raise DBParameterNotFoundException("dbname not found in environment variable")
-            else:
-                pgconnpram["dbconnname"] = params["dbname"]
-            if "user" not in params:
-                raise DBParameterNotFoundException("user not found in environment variable")
-            else:
-                pgconnpram["dbconnuser"] = params["user"]
-            if "host" not in params:
-                raise DBParameterNotFoundException("host not found in environment variable")
-            else:
-                pgconnpram["dbendpoint"] = params["host"]
-            if "password" not in params:
-                raise DBParameterNotFoundException("password not found in environment variable")
-            else:
-                pgconnpram["dbconnpass"] = params["password"]
-            pgconnpram["dbconnport"] = self.db_connection_port
-        return pgconnpram
-
-    def get_db_parameters_using_env(self):
-        pgconnpram = {}
-        osenv = os.environ
-        if osenv is None:
-            raise DBParameterNotFoundException("camp-db-params not present in env. variables")
-        else:
-            if "PGDATABASE" not in osenv:
-                raise DBParameterNotFoundException("PGDATABASE not found in environment variable")
-            else:
-                pgconnpram["dbconnname"] = osenv["PGDATABASE"]
-            if "PGUSER" not in osenv:
-                raise DBParameterNotFoundException("PGUSER not found in environment variable")
-            else:
-                pgconnpram["dbconnuser"] = osenv["PGUSER"]
-            if "PGHOST" not in osenv:
-                raise DBParameterNotFoundException("PGHOST not found in environment variable")
-            else:
-                pgconnpram["dbendpoint"] = osenv["PGHOST"]
-            if "PGPASSWORD" not in osenv:
-                raise DBParameterNotFoundException("PGPASSWORD not found in environment variable")
-            else:
-                pgconnpram["dbconnpass"] = osenv["PGPASSWORD"]
-            pgconnpram["dbconnport"] = self.db_connection_port
-        return pgconnpram
     
     def make_result_for_blocking(self, row):
         result = {}

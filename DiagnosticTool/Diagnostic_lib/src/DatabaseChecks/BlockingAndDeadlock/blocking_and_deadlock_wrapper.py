@@ -4,9 +4,9 @@ import json
 
 #function to invoke from salt
 def blocking_and_deadlock_caller(*argv):
+    if len(argv) != 4:
+        return {"error": "Invalid parameters paased to salt"}
     instance_name = argv[3]
-    if instance_name is None:
-        return {"error": "Instance Name Not Found"}
     blocking_and_deadlock_obj = BlockingDeadlock(instance_name)
     blocking_and_deadlock = {}
     output = blocking_and_deadlock_obj.get_blocking_queries()
