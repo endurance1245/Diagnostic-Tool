@@ -73,9 +73,20 @@ opr_count_pid = SaltOperator(
     dag = performance_workflow_single_dag,
 )
 
+opr_count_workflow = SaltOperator(
+    task_id='count_of_pid',
+    module_name='count_workflow.workflow_count',
+    provide_context = True,
+    execution_timeout = DEFAULT_EXECUTION_TIMEOUT,
+    retries = DEFAULT_RETRIES,
+    retry_delay = DEFAULT_RETRY_DELAY,
+    dag = performance_workflow_single_dag,
+)
+
 #dependencies
 opr_check_memory_usage
 opr_check_swap_usage
 opr_check_mta
 opr_check_cpu
 opr_count_pid
+opr_count_workflow
