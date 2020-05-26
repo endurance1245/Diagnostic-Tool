@@ -61,13 +61,10 @@ def check(task_id, execution_date, check_id):
     check_result_json = {}
     try:
         check_result_json = json.loads(check_result) #convert res to dict
-    except Exception:
-        if "not" in r.value:
-            err = "Output not available for " + check_id
-        else:
-            err = "Output can't be parsed into JSON for " + check_id
+    except Exception as err:
         log.error(err)
-        check_result_json['error'] = err         
+        log.error(check_result)
+        check_result_json['error'] = str(check_result)         
     json_result['output'] = check_result_json
     return make_response(jsonify(json_result), status.HTTP_200_OK)
 
