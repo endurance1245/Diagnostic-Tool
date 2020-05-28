@@ -24,7 +24,6 @@ class WorkflowDailyService:
             output, err = str(output), str(err)
             result = self.make_result(output)
             return result
-            if err
         except subprocess.CalledProcessError as err:
             logging.error(err)
             error_message = dict()
