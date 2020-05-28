@@ -43,6 +43,17 @@ opr_check_long_running_queries = SaltOperator(
     dag = common_database_checks_dag, #associated dag
 )
 
+#opeartor to check idle and running queries in the database
+opr_check_idle_and_running_state = SaltOperator(
+    task_id='check_idle_and_running_state',
+    module_name='idle_and_running_state_wrapper.idle_and_running_state_caller', #to invoke the function of idle and running query
+    provide_context = True,
+    execution_timeout = DEFAULT_EXECUTION_TIMEOUT,
+    retries = DEFAULT_RETRIES,
+    retry_delay = DEFAULT_RETRY_DELAY,
+    dag = common_database_checks_dag, #associated dag
+)
+
 #dependencies
 #run operators sequentially
-opr_check_blocking_and_deadlock >> opr_check_long_running_queries
+opr_check_blocking_and_deadlock >> opr_check_idle_and_running_state >>opr_check_long_running_queries
