@@ -9,7 +9,7 @@ import json
 
 #function to invoke from salt
 def workflow_status_caller(*argv):
-    if len(argv) != 5:
+    if len(argv) < 5:
         return {"error": "Invalid parameters paased to salt"}
     instance_name = argv[3]
     workflow_internalname = argv[4]
