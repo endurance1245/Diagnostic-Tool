@@ -8,7 +8,7 @@ import sys
 import json
 
 #function to invoke from salt
-def blocking_and_deadlock_caller(*argv):
+def bloating_and_analyze_caller(*argv):
     if len(argv) < 4:
         return {"error": "Invalid parameters paased to salt"}
     instance_name = argv[3]
