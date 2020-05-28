@@ -3,7 +3,7 @@ with open(activate_this) as f:
         code = compile(f.read(), activate_this, 'exec')
         exec(code, dict(__file__=activate_this))
 
-from bloating_and_analyze import BloatingAnalyze
+from DatabaseChecks.BloatingAndAnalyze.bloating_and_analyze import BloatingAnalyze
 import sys
 import json
 

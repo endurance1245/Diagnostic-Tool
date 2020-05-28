@@ -3,7 +3,7 @@ with open(activate_this) as f:
         code = compile(f.read(), activate_this, 'exec')
         exec(code, dict(__file__=activate_this))
 
-from blocking_and_deadlock import BlockingDeadlock
+from DatabaseChecks.BlockingAndDeadlock.blocking_and_deadlock import BlockingDeadlock
 import sys
 import json
 

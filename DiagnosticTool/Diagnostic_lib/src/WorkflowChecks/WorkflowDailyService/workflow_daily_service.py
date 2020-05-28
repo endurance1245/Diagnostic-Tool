@@ -2,7 +2,7 @@ activate_this = "/root/diagtool/bin/activate_this.py"
 with open(activate_this) as f:
         code = compile(f.read(), activate_this, 'exec')
         exec(code, dict(__file__=activate_this))
-        
+
 import subprocess
 
 class WorkflowDailyService:
@@ -24,7 +24,6 @@ class WorkflowDailyService:
             output, err = str(output), str(err)
             result = self.make_result(output)
             return result
-            if err
         except subprocess.CalledProcessError as err:
             logging.error(err)
             error_message = dict()
