@@ -1,8 +1,6 @@
 import logging
-import json
 from campaign_db_connection import PgConnection
 from db_parameters import DbParameters
-from newrelic_connection import NewRelicInsight
 from database_exceptions import DBParameterNotFoundException, DataBaseException
 from db_queries import db_query_for_max_connection, db_query_for_blocking, db_query_for_deadlock_count, db_query_for_acquired_lock_modes
 

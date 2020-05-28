@@ -34,13 +34,10 @@ def get_task_runs(task_id, state=None):
             re = {}
             try:
                 re = json.loads(r.value) #convert res to dict
-            except Exception:
-                if "not" in str(r.value):
-                    err = "Output not available for " + r.task_id
-                else:
-                    err = "Output can't be parsed into JSON for " + r.task_id
+            except Exception as err:
                 log.error(err)
-                re['error'] = err
+                log.error(r.value)
+                re['error'] = str(r.value)
             result[r.task_id] = re  
         task_runs.append({
             'id': run.id,
@@ -95,13 +92,10 @@ def get_task_run(task_id, execution_date):
         res = {}
         try:
             res = json.loads(r.value) #convert res to dict
-        except Exception:
-            if "not" in r.value:
-                err = "Output not available for " + r.task_id
-            else:
-                err = "Output can't be parsed into JSON for " + r.task_id
+        except Exception as err:
             log.error(err)
-            res['error'] = err
+            log.error(r.value)
+            res['error'] = str(r.value)
         output[r.task_id] = res
     return {
         'state': taskrun.get_state(),

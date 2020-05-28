@@ -83,6 +83,15 @@ opr_workflow_status = SaltOperator(
     retry_delay = DEFAULT_RETRY_DELAY,
     dag = performance_workflow_single_dag,
 )
+opr_count_workflow = SaltOperator(
+    task_id='count_of_pid',
+    module_name='count_workflow.workflow_count',
+    provide_context = True,
+    execution_timeout = DEFAULT_EXECUTION_TIMEOUT,
+    retries = DEFAULT_RETRIES,
+    retry_delay = DEFAULT_RETRY_DELAY,
+    dag = performance_workflow_single_dag,
+)
 
 #Check  dailyworkflow status if internal is given
 opr_workflow_daily_service = SaltOperator(
@@ -102,3 +111,4 @@ opr_check_cpu
 opr_count_pid
 opr_workflow_status
 opr_workflow_daily_service
+opr_count_workflow
