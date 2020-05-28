@@ -2,8 +2,8 @@ activate_this = "/root/diagtool/bin/activate_this.py"
 with open(activate_this) as f:
         code = compile(f.read(), activate_this, 'exec')
         exec(code, dict(__file__=activate_this))
-        
-from workflow_daily_service import WorkflowDailyService
+
+from WorkflowChecks.WorkflowDailyService.workflow_daily_service import WorkflowDailyService
 import sys
 import json
 
