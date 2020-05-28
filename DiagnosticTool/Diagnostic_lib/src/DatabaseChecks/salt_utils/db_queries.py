@@ -32,3 +32,22 @@ db_query_for_long_running_testing = "SELECT pid, now() - pg_stat_activity.query_
                                     "interval '5 minutes' AND query NOT LIKE 'CLOSE CUR%' AND query NOT LIKE " \
                                     "'COMMIT' AND query NOT LIKE '%GetDate() LIMIT 1 OFFSET%' AND query not " \
                                     "like 'autovacuum%';"
+
+
+#Query to get queries in running state for more than 5 minutes
+db_query_for_running_state = "SELECT pid, now() - pg_stat_activity.query_start AS duration, left(query,100), state FROM pg_stat_activity " \
+                    "WHERE (now() - pg_stat_activity.query_start) > interval '5 minutes' AND query NOT LIKE 'CLOSE CUR%' AND" \
+                    " query NOT LIKE 'COMMIT' AND query NOT LIKE '%GetDate() LIMIT 1 OFFSET%' AND query not like 'autovacuum%' AND state != 'idle' ORDER BY duration DESC LIMIT 10;"
+
+#Query to get queries in idle state for more than 720 minutes ie 12 hrs
+db_query_for_idle_state ="SELECT pid, now() - pg_stat_activity.query_start AS duration, left(query,100), state FROM pg_stat_activity " \
+                    "WHERE (now() - pg_stat_activity.query_start) > interval '720 minutes' AND query NOT LIKE '%GetDate() LIMIT 1 OFFSET%'" \
+                    "AND state = 'idle' ORDER BY duration DESC LIMIT 10;"
+
+#Query to get workflow id based on intername of workflow
+db_query_for_workflow_id = "select iworkflowid, sinternalname, slabel from xtkworkflow where sinternalname LIKE '%{}%';"
+
+#Query to get workflow status like how long it has been running
+db_query_for_workflow_status ="select pid, state,  datname, now() - pg_stat_activity.query_start AS duration, left(query,100) " \
+                              "from pg_stat_activity WHERE query LIKE '%{}%' AND query NOT LIKE '%select pid, state,  datname,"\
+                              "now() - pg_stat_activity.query_start AS duration, left(query,100) from%' ORDER BY duration DESC LIMIT 10;"    
