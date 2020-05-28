@@ -1,3 +1,8 @@
+activate_this = "/root/diagtool/bin/activate_this.py"
+with open(activate_this) as f:
+        code = compile(f.read(), activate_this, 'exec')
+        exec(code, dict(__file__=activate_this))
+        
 db_query_for_max_connection = "SELECT COUNT(*) connections_awaiting_lock FROM pg_locks WHERE granted = false GROUP BY pid;"
 db_query_for_blocking = "SELECT blocked_locks.pid AS blocked_pid, " \
                 "blocked_activity.usename AS blocked_user, blocking_activity.query AS blocking_statement, " \
