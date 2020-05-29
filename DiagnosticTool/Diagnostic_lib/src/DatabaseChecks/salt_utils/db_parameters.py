@@ -16,7 +16,7 @@ class DbParameters:
     def get_db_parameters(self):
         pgconnpram = {}
         output = subprocess.check_output('eval `camp-db-params -e`;', shell=True)
-        params = str(subprocess.check_output('echo `camp-db-params`', shell=True))
+        params = str(subprocess.check_output('echo `camp-db-params`', shell=True),'utf-8')
         if params is None or params == "\n":
             try:
                 parameters = self.get_db_parameters_using_env()
