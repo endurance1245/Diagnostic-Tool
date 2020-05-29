@@ -63,7 +63,7 @@ db_query_to_check_bloating = "SELECT current_database(), schemaname, tablename, 
 db_query_to_check_db_version = "SHOW server_version;"
 
 #returns table size in kB
-table_size_query = "SELECT pg_size_pretty( pg_total_relation_size('"  + {} + "'));"
+table_size_query = "SELECT pg_size_pretty( pg_total_relation_size('{}'));"
 
 #Query to get queries in running state for more than 5 minutes
 db_query_for_running_state = "SELECT pid, now() - pg_stat_activity.query_start AS duration, left(query,100), state FROM pg_stat_activity " \
