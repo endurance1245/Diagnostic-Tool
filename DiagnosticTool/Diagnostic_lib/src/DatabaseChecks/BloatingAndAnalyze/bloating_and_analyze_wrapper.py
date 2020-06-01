@@ -10,7 +10,7 @@ import json
 #function to invoke from salt
 def bloating_and_analyze_caller(*argv):
     if len(argv) < 4:
-        return {"error": "Invalid parameters paased to salt"}
+        return {"error": "Invalid parameters passed to salt"}
     instance_name = argv[3]
     bloating_and_analyze_obj = BloatingAnalyze(instance_name)
     bloating_and_analyze = {}

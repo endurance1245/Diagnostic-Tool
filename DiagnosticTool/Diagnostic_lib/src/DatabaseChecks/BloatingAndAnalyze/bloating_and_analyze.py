@@ -80,8 +80,9 @@ class BloatingAnalyze:
                             }
                         }
                     ]
-                start_time = datetime.now() - timedelta(hours = 3)
-                end_time = datetime.now()
+                current_time = datetime.utcnow()
+                start_time = current_time - timedelta(hours = 4)
+                end_time = current_time
                 try:
                     pi_response = PerformanceInsights(region).get_pi_resource_metrices(metric_queries, campaign_db_name ,start_time, end_time)
                 except PerformanceInsightsConnectionException as err:
