@@ -45,11 +45,11 @@ class PerformanceInsights(AWSBaseConnection):
                     Identifier=resource_id,
                     MetricQueries = metric_queries,
                     StartTime=start_time,
-                    EndTime=datetime.now(),
+                    EndTime=end_time,
                     PeriodInSeconds=3600,
                     MaxResults=10
             )
         except Exception as err:
-            logging.error(err.message)
-            raise PerformanceInsightsConnectionException(err.message)
+            logging.error(str(err))
+            raise PerformanceInsightsConnectionException(str(err))
         return response
