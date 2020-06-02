@@ -1,9 +1,13 @@
 #!/usr/bin/python
+activate_this = "/root/diagtool/bin/activate_this.py"
+with open(activate_this) as f:
+        code = compile(f.read(), activate_this, 'exec')
+        exec(code, dict(__file__=activate_this))
+
 import os
 import pgconnection
 import newrelicconnection
 import logging
-
 
 class LongQuery():
     def __init__(self,campaignhost):
