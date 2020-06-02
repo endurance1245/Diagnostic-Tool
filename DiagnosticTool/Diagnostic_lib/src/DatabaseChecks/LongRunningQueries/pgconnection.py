@@ -55,7 +55,7 @@ class PgConnection(Exception):
             for row in rows:
                 # Now append fetched result of pid:longquery into dict
                 self.longquerydict = {}
-                self.longquerydict["pid"] = row[0]
+                self.longquerydict["pid"] = str(row[0])
                 self.longquerydict["Longrunningquery"] = row[2]
                 self.longquerylist.append(self.longquerydict)
         except StandardError:
