@@ -50,7 +50,7 @@ def callablefunc(*argv):
 
     else:
         print(longrunningqueryresult)
-        return longrunningqueryresult
+        return json.dumps(longrunningqueryresult)
 
 '''
 #To test function locally:-
