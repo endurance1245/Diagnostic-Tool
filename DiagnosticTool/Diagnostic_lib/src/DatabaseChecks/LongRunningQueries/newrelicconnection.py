@@ -1,4 +1,9 @@
 #!/usr/bin/python
+activate_this = "/root/diagtool/bin/activate_this.py"
+with open(activate_this) as f:
+        code = compile(f.read(), activate_this, 'exec')
+        exec(code, dict(__file__=activate_this))
+
 from nrql.api import NRQL
 
 class NewRelic(Exception):
@@ -40,7 +45,7 @@ class NewRelic(Exception):
         #Check for last one hour no of estimated events check for seeing if we are getting data from newrelic.
         if (self.inspectedcountsince1hour == 0 and self.longquery == 0.0) or \
                 (self.inspectedcountsince1hour == 0 and self.longquery is None):
-            self.longqueryexist['longqueryexist'] = 'unknown'
+            self.longqueryexist['longqueryexist'] = True
             return self.longqueryexist
         elif self.inspectedcount >= 1:
             if self.longquery > 1:
