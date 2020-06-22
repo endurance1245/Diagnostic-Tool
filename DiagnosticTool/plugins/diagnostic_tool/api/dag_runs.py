@@ -28,7 +28,7 @@ def get_task_runs(task_id, state=None):
     task_runs = []
     state = state.lower() if state else None
     for run in DagRun.find(dag_id=task_id, state=state):
-        res = XCom.get_many(execution_date=run.execution_date, dag_ids=task_id, include_prior_dates=False)
+        res = XCom.get_many(key=run.run_id, execution_date=run.execution_date, dag_ids=task_id, include_prior_dates=False)
         result = {}
         for r in res:
             re = {}
@@ -51,42 +51,44 @@ def get_task_runs(task_id, state=None):
         })
     return task_runs
 
-@tasks_blueprint.route('/tasks/<string:task_id>/<string:execution_date>', methods=['GET'])
-def task(task_id, execution_date):
+@tasks_blueprint.route('/tasks/<string:task_id>/<string:run_id>', methods=['GET'])
+def task(task_id, run_id):
     """
     Returns a JSON with a dag_run's public instance variables.
-    The format for the exec_date is expected to be
+    The format for the exec_date in run_id is expected to be
     "YYYY-mm-DDTHH:MM:SS", for example: "2016-11-16T11:34:15". This will
     of course need to have been encoded for URL in the request.
     """
     # Convert string datetime into actual datetime
     try:
+        execution_date = run_id.split('&')[-1]
         execution_date = timezone.parse(execution_date)
     except ValueError:
         error_message = (
-            'Given execution date, {}, could not be identified '
+            'Given execution date, {}, in run_id could not be identified '
             'as a date. Example date format: 2015-11-16T14:34:15+00:00'.format(
                 execution_date))
         log.error(error_message)
         return make_response({'msg': error_message}, status.HTTP_400_BAD_REQUEST)
     try:
-        task_run = get_task_run(task_id, execution_date)
+        task_run = get_task_run(task_id, run_id, execution_date)
     except AirflowException as err:
         log.error(err)
         return make_response({'msg': str(err)}, err.status_code)
     return make_response(jsonify(task_run), status.HTTP_200_OK)
 
-def get_task_run(task_id, execution_date):
-    """Return the task object identified by the given dag_id and task_id.
+def get_task_run(task_id, run_id, execution_date):
+    """Return the task object identified by the given task_id and run_id.
     :param dag_id: DAG id
-    :param execution_date: execution date
+    :param run_id: unique key
+    :param execution_date: execution date in run_id
     :return: Dictionary storing state of the object
     """
 
     task = check_and_get_task(task_id=task_id)
 
-    taskrun = check_and_get_taskrun(task, execution_date)
-    result = XCom.get_many(execution_date=execution_date, dag_ids=task_id, include_prior_dates=False)
+    taskrun = check_and_get_taskrun(task, run_id)
+    result = XCom.get_many(key=run_id, execution_date=execution_date, dag_ids=task_id, include_prior_dates=False)
     output = {}
     for r in result:
         res = {}
