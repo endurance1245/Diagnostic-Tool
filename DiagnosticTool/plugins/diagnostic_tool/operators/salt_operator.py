@@ -22,8 +22,13 @@ class SaltOperator(BaseOperator):
         task_id = context['task_instance'].task_id
         task_instance = context['task_instance']
         minion_name = unique_id.split('&')[0]
+        if context['dag_run'].conf:
+            workflow_name = context['dag_run'].conf['workflow_name']
+            logger.info("workflow label - " + workflow_name)
+        else:
+            workflow_name = None
         #Produce message and get messageid
-        result = self.producingmessage1(unique_id, task_id, minion_name)
+        result = self.producingmessage1(unique_id, task_id, minion_name,workflow_name)
         logger.info("Messageid returned after producing message to SQS queue for polling final output")
         logger.info("******")
         #Taking a break of 60 seconds to read message from SQS queue
@@ -37,11 +42,15 @@ class SaltOperator(BaseOperator):
         task_instance.xcom_push(key=unique_id, value=msg)
 
     #Producing message on SNS
-    def producingmessage1(self, unique_id, task_id, minion_name):
+    def producingmessage1(self, unique_id, task_id, minion_name, workflow_name):
         uniques_id = unique_id + '&' + task_id
-        #"saltmaster":"10.89.98.165
-        payload='{ "instanceid":"' + minion_name +'", "run_id":"'+uniques_id+'", "module":"'+self.module_name+'",' \
-                                                        '"airflowproducingtime":"'+str(datetime.datetime.now())+'"  }'
+        #"saltmaster":"10.89.98.165  
+        if workflow_name is None:
+            payload='{ "instanceid":"' + minion_name +'", "run_id":"'+uniques_id+'", "module":"'+self.module_name+'",' \
+                        '"airflowproducingtime":"'+str(datetime.datetime.now())+'" }'
+        else:
+            payload='{ "instanceid":"' + minion_name +'", "run_id":"'+uniques_id+'", "module":"'+self.module_name+'",' \
+                        '"airflowproducingtime":"'+str(datetime.datetime.now())+'", "workflow_name":"' + workflow_name + '" }'
         print(payload)
         # create a boto3 client
         client = boto3.client('sns', region_name='us-west-2')

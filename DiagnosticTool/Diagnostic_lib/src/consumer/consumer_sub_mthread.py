@@ -58,9 +58,13 @@ class SaltConsumer():
 
                         elif saltpingresult[messagedict['instanceid']]==True:
                             #Sending salt async command to minion
+                            if 'workflow_name' in messagedict:
+                                workflow_name = messagedict['workflow_name']
+                            else:
+                                workflow_name = None
                             saltasynccommand = self.saltcommand(messagedict['instanceid'],messagedict['module'],
                                                          messagedict['run_id'],messagedict['airflowproducingtime'],
-                                                         messagedict['saltconsumingfromsqstime'])
+                                                         messagedict['saltconsumingfromsqstime'],workflow_name)
                             # Deleting the message from queue once processed
                             self.client.delete_message(QueueUrl=self.queue_url, ReceiptHandle=message['ReceiptHandle'])
             else:
@@ -79,9 +83,9 @@ class SaltConsumer():
         output = local.cmd(instanceid, 'test.ping')
         return output
 
-    def saltcommand(self,instanceid,module,runid,airflowproduce,saltconsumesqs):
+    def saltcommand(self,instanceid,module,runid,airflowproduce,saltconsumesqs, workflow_name):
         local = salt.client.LocalClient()
-        output = local.cmd_async(instanceid, module, [airflowproduce, saltconsumesqs, str(datetime.datetime.utcnow()), instanceid], jid=runid, ret='test_timestamp')
+        output = local.cmd_async(instanceid, module, [airflowproduce, saltconsumesqs, str(datetime.datetime.utcnow()), instanceid, workflow_name], jid=runid, ret='test_timestamp')
         return output
 
     def sendemptyresponsetodynamo(self,messageid,instanceid,output):
