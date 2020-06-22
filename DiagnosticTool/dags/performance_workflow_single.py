@@ -74,7 +74,7 @@ opr_count_pid = SaltOperator(
 )
 
 opr_workflow_type = SaltOperator(
-    task_id='count_of_pid',
+    task_id='check_workflow_type',
     module_name='workflow_type_wrapper.workflow_type_caller',
     provide_context = True,
     execution_timeout = DEFAULT_EXECUTION_TIMEOUT,
@@ -95,8 +95,8 @@ opr_workflow_status = SaltOperator(
 )
 
 opr_count_workflow = SaltOperator(
-    task_id='count_of_pid',
-    module_name='count_workflow.workflow_count',
+    task_id='check_workflow_count_and_state',
+    module_name='workflow_count_and_state_wrapper.workflow_count_and_state_caller',
     provide_context = True,
     execution_timeout = DEFAULT_EXECUTION_TIMEOUT,
     retries = DEFAULT_RETRIES,
@@ -104,7 +104,7 @@ opr_count_workflow = SaltOperator(
     dag = performance_workflow_single_dag,
 )
 
-#Check  dailyworkflow status if internal is given
+#Check dailyworkflow status if internal is given
 opr_workflow_daily_service = SaltOperator(
     task_id='check_workflow_daily_service',
     module_name='workflow_daily_service_wrapper.workflow_daily_service_caller', #to invoke the function of workflow status
