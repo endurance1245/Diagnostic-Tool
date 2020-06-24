@@ -1,4 +1,9 @@
 #!/usr/bin/python
+activate_this = "/root/diagtool/bin/activate_this.py"
+with open(activate_this) as f:
+        code = compile(f.read(), activate_this, 'exec')
+        exec(code, dict(__file__=activate_this))
+
 from DatabaseChecks.LongRunningQueries.longrunningquery import LongQuery
 import sys
 import logging
@@ -45,7 +50,7 @@ def callablefunc(*argv):
 
     else:
         print(longrunningqueryresult)
-        return longrunningqueryresult
+        return json.dumps(longrunningqueryresult)
 
 '''
 #To test function locally:-

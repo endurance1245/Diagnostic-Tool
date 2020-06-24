@@ -1,3 +1,8 @@
+activate_this = "/root/diagtool/bin/activate_this.py"
+with open(activate_this) as f:
+        code = compile(f.read(), activate_this, 'exec')
+        exec(code, dict(__file__=activate_this))
+        
 import ast
 import subprocess
 import logging
@@ -10,8 +15,14 @@ class DbParameters:
 
     def get_db_parameters(self):
         pgconnpram = {}
-        output = subprocess.check_output('eval `camp-db-params -e`;', shell=True)
-        params = str(subprocess.check_output('echo `camp-db-params`', shell=True))
+        try:
+            output = subprocess.getoutput('eval `camp-db-params -e`')
+            params = str(subprocess.getoutput('echo `camp-db-params`'))
+        except Exception as err:
+            logging.error(err)
+            error_message = dict()
+            error_message["error"] = str(err)
+            return error_message
         if params is None or params == "\n":
             try:
                 parameters = self.get_db_parameters_using_env()
@@ -22,7 +33,13 @@ class DbParameters:
                 return error_message
         else:
             try:
-                params = ast.literal_eval(params)
+                out_params = ast.literal_eval(params)
+                params = {}
+                for key,val in out_params.items():
+                    if isinstance(key,bytes) and isinstance(val,bytes):
+                        params[str(key,'utf-8')] = str(val,'utf-8')
+                    else:
+                        params[key] = val
             except ValueError as err:
                 logging.error(err)
                 error_message = dict()

@@ -1,11 +1,16 @@
-from blocking_and_deadlock import BlockingDeadlock
+activate_this = "/root/diagtool/bin/activate_this.py"
+with open(activate_this) as f:
+        code = compile(f.read(), activate_this, 'exec')
+        exec(code, dict(__file__=activate_this))
+
+from DatabaseChecks.BlockingAndDeadlock.blocking_and_deadlock import BlockingDeadlock
 import sys
 import json
 
 #function to invoke from salt
 def blocking_and_deadlock_caller(*argv):
     if len(argv) < 4:
-        return {"error": "Invalid parameters paased to salt"}
+        return {"error": "Invalid parameters passed to salt"}
     instance_name = argv[3]
     blocking_and_deadlock_obj = BlockingDeadlock(instance_name)
     blocking_and_deadlock = {}
@@ -36,7 +41,6 @@ def blocking_and_deadlock_caller():
     print("Final result")
     print(blocking_and_deadlock)
     return blocking_and_deadlock
-
 if __name__ == "__main__":
     blocking_and_deadlock_caller()
 '''

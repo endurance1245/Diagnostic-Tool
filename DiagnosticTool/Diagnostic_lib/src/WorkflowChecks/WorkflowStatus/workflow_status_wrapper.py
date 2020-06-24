@@ -1,14 +1,20 @@
-from workflow_status import WorkflowStatus
+activate_this = "/root/diagtool/bin/activate_this.py"
+with open(activate_this) as f:
+        code = compile(f.read(), activate_this, 'exec')
+        exec(code, dict(__file__=activate_this))
+
+from WorkflowChecks.WorkflowStatus.workflow_status import WorkflowStatus
 import sys
 import json
 
 #function to invoke from salt
 def workflow_status_caller(*argv):
-    if len(argv) != 5:
-        return {"error": "Invalid parameters paased to salt"}
+    if len(argv) < 6:
+        return {"error": "Invalid parameters passed to salt"}
     instance_name = argv[3]
-    workflow_internalname = argv[4]
-    workflow_status_obj = WorkflowStatus(instance_name, workflow_internalname)
+    build = argv[4]
+    workflow_internalname = argv[5]
+    workflow_status_obj = WorkflowStatus(instance_name, build, workflow_internalname)
     workflow_status = {}
     output = workflow_status_obj.get_workflow_status()
     workflow_status["Workflow Status"] = output

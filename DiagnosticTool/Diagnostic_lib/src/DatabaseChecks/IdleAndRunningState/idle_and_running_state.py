@@ -1,3 +1,8 @@
+activate_this = "/root/diagtool/bin/activate_this.py"
+with open(activate_this) as f:
+        code = compile(f.read(), activate_this, 'exec')
+        exec(code, dict(__file__=activate_this))
+
 import logging
 
 from campaign_db_connection import PgConnection
@@ -70,7 +75,7 @@ class IdleRunningState:
                     r = self.make_result(row)
                     result_rows.append(r)
                 result["Idle Queries"] = result_rows
-        git return result
+        return result
 
     def make_result(self, row):
         result = {}
