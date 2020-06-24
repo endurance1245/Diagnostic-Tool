@@ -3,13 +3,15 @@ import logging
 from campaign_db_connection import PgConnection
 from db_parameters import DbParameters
 from database_exceptions import DBParameterNotFoundException, DataBaseException
-from db_queries import  db_query_for_keepinterminflag_in_workflow, db_query_for_number_of_tables_in_workflow
+from db_queries import  db_query_for_keepinterminflag_in_workflow, db_query_for_keepinterminflag_in_workflow_acs , db_query_for_number_of_tables_in_workflow , db_query_for_number_of_tables_in_workflow_acs
 
 class WorkflowTablesKeepinterminflag:
 
-    def __init__(self, campaign_host, workflow_internalname):
+    def __init__(self, campaign_host , build, workflow_internalname):
         self.campaign_host = campaign_host
+        self.build = build
         self.workflow_internalname = workflow_internalname
+        
     
     def get_workflow_tables(self):
         try:
@@ -26,7 +28,12 @@ class WorkflowTablesKeepinterminflag:
             result = {}
             db_connection_obj = PgConnection(logging, params)
             try:
-                db_query_result_tables = db_connection_obj.get_result_from_db(db_query_for_number_of_tables_in_workflow.format(self.workflow_internalname))
+                if(self.build < 10000):
+                    db_query = db_query_for_number_of_tables_in_workflow
+                else:
+                    db_query = db_query_for_number_of_tables_in_workflow_acs
+
+                db_query_result_tables = db_connection_obj.get_result_from_db(db_query.format(self.workflow_internalname))
             except DataBaseException as err:
                 logging.error(err)
                 error_message = {}
@@ -35,6 +42,7 @@ class WorkflowTablesKeepinterminflag:
             if db_query_result_tables == []:
                 result["workflow_tables"] = "Currently None"
             else:
+                result = []
                 for row in db_query_result_tables:
                     r = self.make_result_for_keepflag(row)
                     result.append(r)
@@ -57,7 +65,12 @@ class WorkflowTablesKeepinterminflag:
             result = {}
             db_connection_obj = PgConnection(logging, params)
             try:
-                db_query_result_keepintermin = db_connection_obj.get_result_from_db(db_query_for_keepinterminflag_in_workflow.format(self.workflow_internalname))
+                if(self.build < 10000):
+                    db_query = db_query_for_keepinterminflag_in_workflow
+                else:
+                    db_query = db_query_for_keepinterminflag_in_workflow_acs
+
+                db_query_result_keepintermin = db_connection_obj.get_result_from_db(db_query.format(self.workflow_internalname))
             except DataBaseException as err:
                 logging.error(err)
                 error_message = dict()

@@ -4,11 +4,12 @@ import json
 
 #function to invoke from salt
 def workflow_tablekeepresult_caller(*argv):
-    if len(argv) != 5:
-        return {"error": "Invalid parameters paased to salt"}
+    if len(argv) < 6:
+        return {"error": "Invalid parameters passed to salt"}
     instance_name = argv[3]
-    workflow_internalname = argv[4]
-    workflow_obj = WorkflowTablesKeepinterminflag(instance_name, workflow_internalname)
+    build = argv[4]
+    workflow_internalname = argv[5]
+    workflow_obj = WorkflowTablesKeepinterminflag(instance_name, build, workflow_internalname)
     workflow_tables_keepresultflag = {}
     output = workflow_obj.get_workflow_keepresultflag()
     workflow_tables_keepresultflag["Keep Result Flag"] = output
@@ -23,11 +24,11 @@ def workflow_tablekeepresult_caller(*argv):
 def workflow_tablekeepresult_caller():
     print(sys.argv)
     args = sys.argv
-    if len(args) != 3:
+    if len(args) != 4:
         error_message = dict()
         error_message["error"] = "Campaign Host needed as a parameter"
         return error_message
-    workflow_obj = WorkflowTablesKeepinterminflag(args[1], args[2])
+    workflow_obj = WorkflowTablesKeepinterminflag(args[1], args[2], arg[3])
     workflow_tables_keepresultflag = {}
     output = workflow_obj.get_workflow_keepresultflag()
     workflow_tables_keepresultflag["Keep Result Flag"] = output
