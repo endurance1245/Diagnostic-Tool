@@ -1,11 +1,16 @@
-from workflow_daily_service import WorkflowDailyService
+activate_this = "/root/diagtool/bin/activate_this.py"
+with open(activate_this) as f:
+        code = compile(f.read(), activate_this, 'exec')
+        exec(code, dict(__file__=activate_this))
+
+from WorkflowChecks.WorkflowDailyService.workflow_daily_service import WorkflowDailyService
 import sys
 import json
 
 #function to invoke from salt
 def workflow_daily_service_caller(*argv):
-    if len(argv) != 4:
-        return {"error": "Invalid parameters paased to salt"}
+    if len(argv) < 4:
+        return {"error": "Invalid parameters passed to salt"}
     instance_name = argv[3]
     workflow_daily_service_obj = WorkflowDailyService(instance_name)
     workflow_daily_service = {}

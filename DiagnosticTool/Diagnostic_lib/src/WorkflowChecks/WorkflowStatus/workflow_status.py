@@ -1,3 +1,8 @@
+activate_this = "/root/diagtool/bin/activate_this.py"
+with open(activate_this) as f:
+        code = compile(f.read(), activate_this, 'exec')
+        exec(code, dict(__file__=activate_this))
+        
 import logging
 
 from campaign_db_connection import PgConnection
@@ -7,8 +12,9 @@ from db_queries import db_query_for_workflow_id, db_query_for_workflow_status
 
 class WorkflowStatus:
 
-    def __init__(self, campaign_host, workflow_internalname):
+    def __init__(self, campaign_host, build, workflow_internalname):
         self.campaign_host = campaign_host
+        self.build = build
         self.workflow_internalname = workflow_internalname
     
     def get_workflow_status(self):
