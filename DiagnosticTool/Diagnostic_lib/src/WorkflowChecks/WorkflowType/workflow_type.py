@@ -7,6 +7,7 @@ import logging
 from campaign_db_connection import PgConnection
 from db_parameters import DbParameters
 from database_exceptions import DBParameterNotFoundException, DataBaseException
+from db_queries import db_query_for_workflow_id, db_query_for_workflow_id_acs
 
 class WorkflowType:
 
@@ -23,8 +24,11 @@ class WorkflowType:
             result = []
             db_connection_obj = PgConnection(logging, params)
             try:
-                db_query_for_workflow_id = "select iworkflowid, sinternalname, slabel from xtkworkflow where sinternalname LIKE '%{}%';"
-                db_query_result = db_connection_obj.get_result_from_db(db_query_for_workflow_id.format(self.workflow_name))
+                if(self.build <1000):
+                    db_query =  db_query_for_workflow_id
+                else:
+                    db_query = db_query_for_workflow_id_acs
+                db_query_result = db_connection_obj.get_result_from_db(db_query.format(self.workflow_name))
             except DataBaseException as err:
                 logging.error(err)
                 error_message = dict()

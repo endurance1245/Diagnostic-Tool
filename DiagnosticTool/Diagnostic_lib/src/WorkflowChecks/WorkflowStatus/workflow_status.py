@@ -8,7 +8,7 @@ import logging
 from campaign_db_connection import PgConnection
 from db_parameters import DbParameters
 from database_exceptions import DBParameterNotFoundException, DataBaseException
-from db_queries import db_query_for_workflow_id, db_query_for_workflow_status
+from db_queries import db_query_for_workflow_id, db_query_for_workflow_id_acs, db_query_for_workflow_status
 
 class WorkflowStatus:
 
@@ -32,7 +32,11 @@ class WorkflowStatus:
             result = {}
             db_connection_obj = PgConnection(logging, params)
             try:
-                db_query_result = db_connection_obj.get_result_from_db(db_query_for_workflow_id.format(self.workflow_internalname))
+                if(self.build <1000):
+                    db_query =  db_query_for_workflow_id
+                else:
+                    db_query = db_query_for_workflow_id_acs
+                db_query_result = db_connection_obj.get_result_from_db(db_query.format(self.workflow_internalname))
             except DataBaseException as err:
                 logging.error(err)
                 error_message = dict()
