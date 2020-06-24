@@ -10,8 +10,9 @@ from database_exceptions import DBParameterNotFoundException, DataBaseException
 
 class WorkflowType:
 
-    def __init__(self, campaign_host, workflow_name):
+    def __init__(self, campaign_host, build, workflow_name):
         self.campaign_host = campaign_host
+        self.build =  build
         self.workflow_name = workflow_name
 
     def check_workflow_existence(self):
