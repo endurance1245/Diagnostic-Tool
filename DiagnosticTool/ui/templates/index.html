@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<head>
+    <!-- <link rel="stylesheet" type="text/css" href="../static/index.css"> -->
+    <link rel="stylesheet" type="text/css" href="../static/index.css">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
+</head>
+<div>
+    <div class="page">
+        <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='index.css') }}"> -->
+        <script src='https://code.jquery.com/jquery-3.1.0.min.js'></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='script.js') }}"></script>
+        <div class="header">
+            <img src="{{ url_for('static', filename='picture/campaignlogo.png') }}"  alt="logo">
+            <h1 >Diagnostic Tool</h1>
+         </div>
+        <div>
+            <p>Hello {{username}}, </p>
+            <p id="username" style="display: none">{{username}}</p>
+        </div>
+        <div class="formdata" >
+            <label > Campaign Host URL:
+                <input type="text" id="Instancename" size="60"><br><br>
+            </label>
+    
+            <div>
+           
+                <input class="problemblock" type="radio" name="problem" id="Database" value="common_database_check" onclick="databaseradio()"/>
+                <label for="Database">Database Performance Issue</label>
+            
+                <input class="problemblock" type="radio" name="problem" id="Workflow"  value="Workflow" onclick="workflowradio()"/>
+                <label for="Workflow">Workflow Performance Issue</label>
+            </div>
+            <div id="Workflowdetails" class="workflowblock" style="display: none">
+                <label for="Multiple">
+                    <input type="radio" name='workflowtype' class="radio" id="WorkflowMultiple"  value="performance_workflow_multiple" checked/>
+                    Multiple
+                </label>
+                <label for="Single" >
+                    <input type="radio" name='workflowtype' class="radio" id="WorkflowSingle" value="performance_workflow_single" />
+                    Single
+                </label>
+                
+                <div>
+                    <label>Workflow sinternal label:</label>
+                    <input type="text" id="Workflowvalue" placeholder="for single workflow" size="25" >
+                </div>
+            </div>
+            <button class="button" onclick="getProblem()">Submit</button>
+            <div id="outputbox" style="display: none" >
+                <textarea id ="outputtextbox" class="textbox" type="textbox" name="output" rows="8" cols="100" disabled>
+                </textarea>
+                <table id="outputtable" class="table" style="display: none">
+                    <tr class="td">
+                        <th style="width: 20%">
+                            Check
+                        </th>
+                        <th style="width: 80%" >
+                            Result
+                        </th>
+                    </tr>
+                </table>
+            </div>
+            <div id="triggerloader" class="loaderblock" style="display: none">
+                    <div class="loader"></div>
+                    <p>DAG Trigger in progress...</p>
+            </div>
+            <div id="loader" class="loaderblock" style="display: none">
+                <div class="loader"></div>
+                <p>Running DAGs and loading output, do not refresh the page</p>
+            </div>
+            <div id="outputcomplete"  style="display: none">
+                    <p>Running of DAGs completed and output loaded</p>
+            </div>
+            <div id="errorblock"  style="display: none">
+                    <p>Error occured, please try again</p>
+            </div>
+        </div>
+    
+    </div>
+</div>
+</html>
+
+
+
