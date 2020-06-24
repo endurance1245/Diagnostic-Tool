@@ -27,11 +27,11 @@ def workflow_type_caller(*argv):
 def workflow_type_caller():
     print(sys.argv)
     args = sys.argv
-    if len(args) != 3:
+    if len(args) != 4:
         error_message = dict()
-        error_message["error"] = "Campaign Host and workflow name needed as a parameter"
+        error_message["error"] = "Invalid parameters passed"
         return error_message
-    workflow_type_obj = WorkflowType(args[1], args[2])
+    workflow_type_obj = WorkflowType(args[1], args[2], args[3])
     workflow_type = {}
     output = workflow_type_obj.get_workflow_type()
     workflow_type["Workflow Type Result"] = output
