@@ -31,7 +31,7 @@ def check(task_id, run_id, check_id):
     """
     Returns a JSON with a check instance's public instance variables with output.
     The format for the execution_date in run_id is expected to be
-    "YYYY-mm-DDTHH:MM:SS.microseconds", for example: "2016-11-16T11:34:15.123212".
+    "YYYY-mm-DDTHH:MM:SS", for example: "2016-11-16T11:34:15".
     """
 
     # Convert string datetime into actual datetime
@@ -41,7 +41,7 @@ def check(task_id, run_id, check_id):
     except ValueError:
         error_message = (
             'Given execution date in run_id, {}, could not be identified '
-            'as a date. Example date format: 2015-11-16T14:34:15+00:00'
+            'as a date. Example date format: 2015-11-16T14:34:15'
             .format(execution_date))
         log.error(error_message)
         return make_response({'msg': error_message}, status.HTTP_400_BAD_REQUEST)

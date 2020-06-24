@@ -44,6 +44,7 @@ def get_task_runs(task_id, state=None):
             'run_id': run.run_id,
             'state': run.state,
             'task_id': run.dag_id,
+            'conf': run.conf,
             'execution_date': run.execution_date.isoformat(),
             'start_date': ((run.start_date or '') and
                            run.start_date.isoformat()),
@@ -66,7 +67,7 @@ def task(task_id, run_id):
     except ValueError:
         error_message = (
             'Given execution date, {}, in run_id could not be identified '
-            'as a date. Example date format: 2015-11-16T14:34:15+00:00'.format(
+            'as a date. Example date format: 2015-11-16T14:34:15'.format(
                 execution_date))
         log.error(error_message)
         return make_response({'msg': error_message}, status.HTTP_400_BAD_REQUEST)
@@ -103,6 +104,7 @@ def get_task_run(task_id, run_id, execution_date):
         'state': taskrun.get_state(),
         'id' : taskrun.id,
         'run_id' : taskrun.run_id,
+        'conf' : taskrun.conf,
         'execution_date': taskrun.execution_date.isoformat(),
         'start_date': ((taskrun.start_date or '') and
                            taskrun.start_date.isoformat()),

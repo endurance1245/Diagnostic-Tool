@@ -10,11 +10,12 @@ import json
 
 #function to invoke from salt
 def workflow_type_caller(*argv):
-    if len(argv) < 5:
-        return {"error": "Invalid parameters paased to salt"}
+    if len(argv) < 6:
+        return {"error": "Invalid parameters passed to salt"}
     instance_name = argv[3]
-    workflow_name = argv[4]
-    workflow_type_obj = WorkflowType(instance_name, workflow_name)
+    build = argv[4]
+    workflow_name = argv[5]
+    workflow_type_obj = WorkflowType(instance_name, build, workflow_name)
     workflow_type = {}
     output = workflow_type_obj.get_workflow_type()
     workflow_type["Workflow Type Result"] = output

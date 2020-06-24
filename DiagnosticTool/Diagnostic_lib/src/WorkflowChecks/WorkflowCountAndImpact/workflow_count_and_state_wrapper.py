@@ -10,7 +10,7 @@ import json
 #function to invoke from salt
 def workflow_count_and_state_caller(*argv):
     if len(argv) < 4:
-        return {"error": "Invalid parameters paased to salt"}
+        return {"error": "Invalid parameters passed to salt"}
     instance_name = argv[3]
     workflow_count_and_state_obj = WorkflowCountAndWebState(instance_name)
     workflow_count_and_state = {}

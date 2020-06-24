@@ -12,8 +12,9 @@ from db_queries import db_query_for_workflow_id, db_query_for_workflow_status
 
 class WorkflowStatus:
 
-    def __init__(self, campaign_host, workflow_internalname):
+    def __init__(self, campaign_host, build, workflow_internalname):
         self.campaign_host = campaign_host
+        self.build = build
         self.workflow_internalname = workflow_internalname
     
     def get_workflow_status(self):

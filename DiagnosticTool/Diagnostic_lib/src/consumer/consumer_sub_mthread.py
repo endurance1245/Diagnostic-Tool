@@ -64,7 +64,7 @@ class SaltConsumer():
                                 workflow_name = None
                             saltasynccommand = self.saltcommand(messagedict['instanceid'],messagedict['module'],
                                                          messagedict['run_id'],messagedict['airflowproducingtime'],
-                                                         messagedict['saltconsumingfromsqstime'],workflow_name)
+                                                         messagedict['saltconsumingfromsqstime'],messagedict['build'],workflow_name)
                             # Deleting the message from queue once processed
                             self.client.delete_message(QueueUrl=self.queue_url, ReceiptHandle=message['ReceiptHandle'])
             else:
@@ -83,9 +83,9 @@ class SaltConsumer():
         output = local.cmd(instanceid, 'test.ping')
         return output
 
-    def saltcommand(self,instanceid,module,runid,airflowproduce,saltconsumesqs, workflow_name):
+    def saltcommand(self,instanceid,module,runid,airflowproduce,saltconsumesqs, build, workflow_name):
         local = salt.client.LocalClient()
-        output = local.cmd_async(instanceid, module, [airflowproduce, saltconsumesqs, str(datetime.datetime.utcnow()), instanceid, workflow_name], jid=runid, ret='test_timestamp')
+        output = local.cmd_async(instanceid, module, [airflowproduce, saltconsumesqs, str(datetime.datetime.utcnow()), instanceid, build, workflow_name], jid=runid, ret='test_timestamp')
         return output
 
     def sendemptyresponsetodynamo(self,messageid,instanceid,output):
