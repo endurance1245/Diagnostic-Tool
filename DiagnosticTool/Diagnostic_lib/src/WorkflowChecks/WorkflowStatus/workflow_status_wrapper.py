@@ -26,11 +26,11 @@ def workflow_status_caller(*argv):
 def workflow_status_caller():
     print(sys.argv)
     args = sys.argv
-    if len(args) != 3:
+    if len(args) != 4:
         error_message = dict()
-        error_message["error"] = "Campaign Host needed as a parameter"
+        error_message["error"] = "Invalid parameters passed"
         return error_message
-    workflow_status_obj = WorkflowStatus(args[1], args[2])
+    workflow_status_obj = WorkflowStatus(args[1], args[2], args[3])
     workflow_status = {}
     output = workflow_status_obj.get_workflow_status()
     workflow_status["Workflow Status"] = output
