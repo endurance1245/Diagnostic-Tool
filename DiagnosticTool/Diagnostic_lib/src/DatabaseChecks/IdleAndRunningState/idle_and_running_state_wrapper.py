@@ -9,8 +9,8 @@ import json
 
 #function to invoke from salt
 def idle_and_running_state_caller(*argv):
-    if len(argv) != 4:
-        return {"error": "Invalid parameters paased to salt"}
+    if len(argv) < 4:
+        return {"error": "Invalid parameters passed to salt"}
     instance_name = argv[3]
     idle_and_running_state_obj = IdleRunningState(instance_name)
     idle_and_running_state = {}
@@ -20,6 +20,7 @@ def idle_and_running_state_caller(*argv):
     idle_and_running_state["Idle Query Result"] = output
     idle_and_running_state = json.dumps(idle_and_running_state)
     return idle_and_running_state
+
 
 '''
 #Whenever want to run standalone script
