@@ -94,6 +94,17 @@ opr_workflow_status = SaltOperator(
     dag = performance_workflow_single_dag,
 )
 
+#Check how many tables does the workflow has 
+opr_workflow_tables_keepinterminflag = SaltOperator(
+    task_id='check_workflow_tables_keepinterminflag',
+    module_name='workflow_tables_keepinterminflag_wrapper.workflow_tablekeepresult_caller', #to invoke the function of workflow status
+    provide_context = True,
+    execution_timeout = DEFAULT_EXECUTION_TIMEOUT,
+    retries = DEFAULT_RETRIES,
+    retry_delay = DEFAULT_RETRY_DELAY,
+    dag = performance_workflow_single_dag,
+)
+
 #Check dailyworkflow status if internal is given
 opr_workflow_daily_service = SaltOperator(
     task_id='check_workflow_daily_service',
@@ -113,3 +124,4 @@ opr_count_pid
 opr_workflow_type
 opr_workflow_status
 opr_workflow_daily_service
+opr_workflow_tables_keepinterminflag
