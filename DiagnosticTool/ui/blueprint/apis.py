@@ -49,7 +49,7 @@ def setTrigger(taskId):
         execution_date = time
         URL = 'http://10.0.0.183:8080/api/experimental/dags/'+taskId+'/dag_runs'
         try:
-            result = requests.post(URL, headers = {'Accept': 'application/json', 'Content-Type': 'application/x-www-form-urlencoded'}, data = json.dumps({'run_id' : run_id,'execution_date': execution_date}))
+            result = requests.post(URL, headers = {'Accept': 'application/json', 'Content-Type': 'application/x-www-form-urlencoded'}, data = json.dumps({'run_id' : run_id,'execution_date': execution_date, 'conf': conf}))
             resultValue = result.json()
             return make_response(resultValue, result.status_code)
         except Exception as er:
@@ -91,7 +91,7 @@ def checkRunningDag(taskId, executionTimeStamp,instanceName):
     '''
     if taskId and executionTimeStamp and instanceName:
         URL = 'http://10.0.0.183:8080/diagnostictool/tasks/'+taskId+'/check_dag_run/'+executionTimeStamp+'?instance_name='+instanceName
-        print(URL)
+        
         try:
             result = requests.get(URL, headers = {'Content-type' : 'application/json','Accept': 'application/json'})
             resultValue = result.json()
