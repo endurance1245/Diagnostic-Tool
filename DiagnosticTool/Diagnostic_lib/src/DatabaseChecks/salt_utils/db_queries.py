@@ -58,7 +58,7 @@ db_query_to_check_bloating = "SELECT current_database(), schemaname, tablename, 
         "AS foo ) AS rs JOIN pg_class cc ON cc.relname = rs.tablename JOIN pg_namespace nn " \
         "ON cc.relnamespace = nn.oid AND nn.nspname = rs.schemaname AND nn.nspname <> 'information_schema' " \
         "LEFT JOIN pg_index i ON indrelid = cc.oid LEFT JOIN pg_class c2 ON c2.oid = i.indexrelid ) " \
-        "AS sml ORDER BY wastedbytes DESC,wastedibytes DESC LIMIT 10;"
+        "AS sml ORDER BY wastedbytes DESC,wastedibytes DESC,ibloat DESC LIMIT 5;"
 
 db_query_to_check_db_version = "SHOW server_version;"
 
