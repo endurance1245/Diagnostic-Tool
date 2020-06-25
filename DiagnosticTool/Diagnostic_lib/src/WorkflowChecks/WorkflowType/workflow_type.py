@@ -24,7 +24,7 @@ class WorkflowType:
             result = []
             db_connection_obj = PgConnection(logging, params)
             try:
-                if(self.build <1000):
+                if(self.build <10000):
                     db_query =  db_query_for_workflow_id
                 else:
                     db_query = db_query_for_workflow_id_acs
