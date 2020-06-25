@@ -10,7 +10,7 @@ import json
 #function to invoke from salt
 def idle_and_running_state_caller(*argv):
     if len(argv) != 4:
-        return {"error": "Invalid parameters paased to salt"}
+        return {"error": "Invalid parameters passed to salt"}
     instance_name = argv[3]
     idle_and_running_state_obj = IdleRunningState(instance_name)
     idle_and_running_state = {}
