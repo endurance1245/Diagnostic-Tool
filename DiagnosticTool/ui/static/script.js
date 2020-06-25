@@ -9,6 +9,11 @@ function databaseradio(){
 
 // To take the problem details of the user
 function getProblem() {
+    $('#errorblock').hide()
+    $('#outputcomplete').hide()
+    $('#loader').hide()
+    $('#triggerloader').hide()
+    document.getElementsByName('output')[0].value="Welcome to Campaign Diagnostic Tool!";
     var instance = document.getElementById("Instancename").value;
     var configuration = {}
     var username = document.getElementById("username").innerHTML;
@@ -147,8 +152,7 @@ function pausedDag(instance, problem, timestamp, configuration){
         $('#triggerloader').hide()
         $('#errorblock').show()
         console.log("error");
-        document.getElementsByName('output')[0].value=document.getElementsByName('output')[0].value+"\nError Occured! DAGs are paused"+"\n"+JSON.stringify(err, undefined, 4);
-        console.log(err);
+        document.getElementsByName('output')[0].value=document.getElementsByName('output')[0].value+"\nError Occured! DAGs are paused";
     });
 }
 
@@ -186,7 +190,6 @@ function checkRunningDag(instance, problem, timestamp, configuration){
         $('#errorblock').show()
         console.log("error");
         document.getElementsByName('output')[0].value=document.getElementsByName('output')[0].value+"\nError Occured while Trigger!";
-        console.log(err);
         return err
     });
 }
@@ -227,7 +230,6 @@ function triggerDag(instance, problem, timestamp, configuration){
         $('#errorblock').show()
         console.log("error");
         document.getElementsByName('output')[0].value=document.getElementsByName('output')[0].value+"\nError Occured while Trigger!";
-        console.log(err);
         return err
     });
 }
@@ -252,9 +254,9 @@ function getOutput(problem_id, runId) {
         
         console.log("data in output");
         console.log(data);
-        if(data==="")
+        if(data==="{}")
         {
-            document.getElementsByName('output')[0].value=document.getElementsByName('output')[0].value + "Error Occured in DAG\n"
+            document.getElementsByName('output')[0].value=document.getElementsByName('output')[0].value + "Error Occured while running DAG\n"
         }
         else{
             displayOutput(data);
@@ -294,7 +296,7 @@ function strptime(){
     }
     function addZero(x,n){
         while (x.toString().length < n) {
-            x = "0" + x;
+            x = "0" + x; 
             }
         return x;
 }
