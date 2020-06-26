@@ -65,10 +65,10 @@ class WorkflowCountAndWebState:
     def get_last_restart_of_web(self):
         result = {}
         try:
-            p1 = subprocess.check_output('su -l -c ". /usr/local/neolane/nl?/env.sh; nlserver monitor | grep -A3 web" neolane', shell=True, stdout=subprocess.PIPE,  stderr=subprocess.PIPE)
+            p1 = str(subprocess.check_output('su -l -c ". /usr/local/neolane/nl?/env.sh; nlserver monitor | grep -A3 web" neolane', shell=True))
             # p1 = subprocess.Popen(["nlserver", "monitor"], stdout=subprocess.PIPE,  stderr=subprocess.PIPE)
             # p2 = subprocess.Popen(["grep", "-A3", "web"], stdin=p1.stdout, stdout=subprocess.PIPE,  stderr=subprocess.PIPE)
-            out, err = p1.communicate()
+            #out, err = p1.communicate()
         except subprocess.CalledProcessError as err:
             logging.error(err)
             result["error"] = str(err)
@@ -81,7 +81,8 @@ class WorkflowCountAndWebState:
             logging.error(err)
             result["error"] = str(err)
             return result
-        process_root = ET.fromstring(out)
+        p1 = p1[p1.find('<'):]
+        process_root = ET.fromstring(p1)
         if "dead" in process_root.attrib:
             process_dead_state = process_root.attrib["dead"]
         else:
