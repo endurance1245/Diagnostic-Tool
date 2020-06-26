@@ -1,9 +1,10 @@
-activate_this = "/root/diagtool/bin/activate_this.py"
+iactivate_this = "/root/diagtool/bin/activate_this.py"
 with open(activate_this) as f:
         code = compile(f.read(), activate_this, 'exec')
         exec(code, dict(__file__=activate_this))
 
 import subprocess
+import logging
 
 class WorkflowDailyService:
 
@@ -16,12 +17,10 @@ class WorkflowDailyService:
         """
         result = {}
         try:
-            proc1 = subprocess.Popen(["nlserver", "pdump" , "-full"], stdout=subprocess.PIPE)
-            proc2 = subprocess.Popen(["grep", "-A 9", "wfserver"], stdin=proc1.stdout,
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            proc1.stdout.close() # Allow proc1 to receive a SIGPIPE if proc2 exits.
-            output, err = proc2.communicate()
+            proc1 = subprocess.Popen('su -l -c ". /usr/local/neolane/nl?/env.sh; nlserver pdump -full | grep -A 9 wfserver" neolane', shell = True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            output, err = proc1.communicate()
             output, err = str(output), str(err)
+            proc1.stdout.close()
             result = self.make_result(output)
             return result
         except subprocess.CalledProcessError as err:
