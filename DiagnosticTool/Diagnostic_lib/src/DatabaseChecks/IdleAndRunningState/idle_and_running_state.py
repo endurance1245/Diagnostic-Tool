@@ -74,7 +74,7 @@ class IdleRunningState:
                 for row in db_query_result:
                     r = self.make_result(row)
                     result_rows.append(r)
-                result["Idle Queries"] = result_rows
+                result["Idle Queries for 720 mins"] = result_rows
         return result
 
     def make_result(self, row):

@@ -14,8 +14,8 @@ def idle_and_running_state_caller(*argv):
     instance_name = argv[3]
     idle_and_running_state_obj = IdleRunningState(instance_name)
     idle_and_running_state = {}
-    output = idle_and_running_state_obj.get_running_queries()
-    idle_and_running_state["Running Query Result"] = output
+    # output = idle_and_running_state_obj.get_running_queries()
+    # idle_and_running_state["Running Query Result"] = output
     output = idle_and_running_state_obj.get_idle_queries()
     idle_and_running_state["Idle Query Result"] = output
     idle_and_running_state = json.dumps(idle_and_running_state)
