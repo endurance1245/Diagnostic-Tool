@@ -43,7 +43,8 @@ class WorkflowCountAndWebState:
     def get_web_process_usage(self):
         result = {}
         try:
-            web_process = str(subprocess.check_output('nlserver pdump | grep web@default', shell=True))
+            web_process = str(subprocess.check_output('su -l -c ". /usr/local/neolane/nl?/env.sh; nlserver pdump | grep web@default" neolane', shell=True))
+            # web_process = str(subprocess.check_output('nlserver pdump | grep web@default', shell=True))
         except subprocess.CalledProcessError as err:
             logging.error(err)
             result["error"] = str(err)
@@ -64,9 +65,10 @@ class WorkflowCountAndWebState:
     def get_last_restart_of_web(self):
         result = {}
         try:
-            p1 = subprocess.Popen(["nlserver", "monitor"], stdout=subprocess.PIPE,  stderr=subprocess.PIPE)
-            p2 = subprocess.Popen(["grep", "-A3", "web"], stdin=p1.stdout, stdout=subprocess.PIPE,  stderr=subprocess.PIPE)
-            out, err = p2.communicate()
+            p1 = subprocess.check_output('su -l -c ". /usr/local/neolane/nl?/env.sh; nlserver monitor | grep -A3 web" neolane', shell=True, stdout=subprocess.PIPE,  stderr=subprocess.PIPE)
+            # p1 = subprocess.Popen(["nlserver", "monitor"], stdout=subprocess.PIPE,  stderr=subprocess.PIPE)
+            # p2 = subprocess.Popen(["grep", "-A3", "web"], stdin=p1.stdout, stdout=subprocess.PIPE,  stderr=subprocess.PIPE)
+            out, err = p1.communicate()
         except subprocess.CalledProcessError as err:
             logging.error(err)
             result["error"] = str(err)
