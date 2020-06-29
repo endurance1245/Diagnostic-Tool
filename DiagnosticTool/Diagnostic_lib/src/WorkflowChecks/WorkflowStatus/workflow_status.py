@@ -14,7 +14,7 @@ class WorkflowStatus:
 
     def __init__(self, campaign_host, build, workflow_internalname):
         self.campaign_host = campaign_host
-        self.build = build
+        self.build = int(build)
         self.workflow_internalname = workflow_internalname
     
     def get_workflow_status(self):
@@ -32,7 +32,7 @@ class WorkflowStatus:
             result = {}
             db_connection_obj = PgConnection(logging, params)
             try:
-                if(self.build <10000):
+                if(self.build < 10000):
                     db_query =  db_query_for_workflow_id
                 else:
                     db_query = db_query_for_workflow_id_acs
