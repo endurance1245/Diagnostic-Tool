@@ -1,4 +1,4 @@
-from workflow_tables_keepinterminflag import WorkflowTablesKeepinterminflag
+from WorkflowChecks.WorkflowTablesKeepinterminflag.workflow_tables_keepinterminflag import WorkflowTablesKeepinterminflag
 import sys
 import json
 
