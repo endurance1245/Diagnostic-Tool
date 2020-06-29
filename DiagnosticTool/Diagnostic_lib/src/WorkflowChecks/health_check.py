@@ -55,8 +55,7 @@ def get_mta_usage(*argv):
     #Find mta process id
     result = {}
     try:
-        # 'su -l -c ". /usr/local/neolane/nl?/env.sh; nlserver pdump -full | grep -A 9 wfserver" neolane'
-        mta_process = str(subprocess.check_output('su -l -c ". /usr/local/neolane/nl?/env.sh; nlserver pdump | grep mta" neolane', shell=True))
+        mta_process = str(subprocess.check_output('su -l -c ". /usr/local/neolane/nl?/env.sh; nlserver pdump | grep mta" neolane', shell=True),'utf-8')
         # previous mta_process = str(subprocess.check_output('nlserver pdump | grep mta', shell=True))
     except subprocess.CalledProcessError as e:
         result["message"] = "MTA not running"
