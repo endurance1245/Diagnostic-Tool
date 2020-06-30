@@ -86,17 +86,10 @@ db_query_for_workflow_status ="select pid, state,  datname, now() - pg_stat_acti
                               "now() - pg_stat_activity.query_start AS duration, left(query,100) from%' ORDER BY duration DESC LIMIT 10;"    
 
 #Query to find number of table in the workflow 
-db_query_for_number_of_tables_in_workflow = "select A.slabel as Workflow, A.sinternalname as InternalName, B.count1 as WorkTables from xtkworkflow "\
-                                            "as A join (select count(substring(tablename from E'wkf#\"[[:digit:]]#\"%' for '#')) as count1, " \
-                                            "substring(tablename from E'wkf#\"[[:digit:]]#\"%' for '#') as workflowid from pg_tables where tablename like 'wkf%' " \
-                                            "group by substring(tablename from E'wkf#\"[[:digit:]]+#\"%' for '#')) as B ON A.iworkflowid=cast(B.workflowid as bigint) " \
-                                            "WHERE A.sinternalname LIKE '{}' order by B.count1 desc LIMIT 25; "
+# db_query_for_number_of_tables_in_workflow = "WorkTables from xtkworkflow as A join (select count(substring(tablename from E'wkf#\"[[:digit:]]+#\"%' for '#')) as count1, substring(tablename from E'wkf#\"[[:digit:]]+#\"%' for '#') as workflowid from pg_tables where tablename like 'wkf%' group by substring(tablename from E'wkf#\"[[:digit:]]+#\"%' for '#')) as B ON A.iworkflowid=cast(B.workflowid as bigint) WHERE A.sinternalname LIKE '{}' order by B.count1 desc LIMIT 25;"
+db_query_for_number_of_tables_in_workflow = "WorkTables from xtkworkflow as A join (select count(substring(tablename from E'wkf#\"[[:digit:]]+#\"%' for '#')) as count1, substring(tablename from E'wkf#\"[[:digit:]]+#\"%' for '#') as workflowid from pg_tables where tablename like 'wkf%' group by substring(tablename from E'wkf#\"[[:digit:]]+#\"%' for '#')) as B ON A.iworkflowid=cast(B.workflowid as bigint) WHERE A.sinternalname LIKE '{}' order by B.count1 desc LIMIT 25;"
 
-db_query_for_number_of_tables_in_workflow_acs = "select A.slabel as Workflow, A.sname as InternalName, B.count1 as WorkTables from xtkworkflow "\
-                                            "as A join (select count(substring(tablename from E'wkf#\"[[:digit:]]#\"%' for '#')) as count1, " \
-                                            "substring(tablename from E'wkf#\"[[:digit:]]#\"%' for '#') as workflowid from pg_tables where tablename like 'wkf%' " \
-                                            "group by substring(tablename from E'wkf#\"[[:digit:]]+#\"%' for '#')) as B ON A.iworkflowid=cast(B.workflowid as bigint) " \
-                                            "WHERE A.sname LIKE '{}' order by B.count1 desc LIMIT 25; "
+db_query_for_number_of_tables_in_workflow_acs = "WorkTables from xtkworkflow as A join (select count(substring(tablename from E'wkf#\"[[:digit:]]+#\"%' for '#')) as count1, substring(tablename from E'wkf#\"[[:digit:]]+#\"%' for '#') as workflowid from pg_tables where tablename like 'wkf%' group by substring(tablename from E'wkf#\"[[:digit:]]+#\"%' for '#')) as B ON A.iworkflowid=cast(B.workflowid as bigint) WHERE A.sname LIKE '{}' order by B.count1 desc LIMIT 25;"
                                           
 
 #Query to find if workflow has "keep intermin results on"
