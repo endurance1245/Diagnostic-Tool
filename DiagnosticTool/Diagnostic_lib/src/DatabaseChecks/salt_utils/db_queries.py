@@ -90,18 +90,18 @@ db_query_for_number_of_tables_in_workflow = "select A.slabel as Workflow, A.sint
                                             "as A join (select count(substring(tablename from E'wkf#\"[[:digit:]]#\"%' for '#')) as count1, " \
                                             "substring(tablename from E'wkf#\"[[:digit:]]#\"%' for '#') as workflowid from pg_tables where tablename like 'wkf%' " \
                                             "group by substring(tablename from E'wkf#\"[[:digit:]]+#\"%' for '#')) as B ON A.iworkflowid=cast(B.workflowid as bigint) " \
-                                            "WHERE A.sinternalname LIKE {} order by B.count1 desc LIMIT 25; "
+                                            "WHERE A.sinternalname LIKE '{}' order by B.count1 desc LIMIT 25; "
 
 db_query_for_number_of_tables_in_workflow_acs = "select A.slabel as Workflow, A.sname as InternalName, B.count1 as WorkTables from xtkworkflow "\
                                             "as A join (select count(substring(tablename from E'wkf#\"[[:digit:]]#\"%' for '#')) as count1, " \
                                             "substring(tablename from E'wkf#\"[[:digit:]]#\"%' for '#') as workflowid from pg_tables where tablename like 'wkf%' " \
                                             "group by substring(tablename from E'wkf#\"[[:digit:]]+#\"%' for '#')) as B ON A.iworkflowid=cast(B.workflowid as bigint) " \
-                                            "WHERE A.sname LIKE {} order by B.count1 desc LIMIT 25; "
+                                            "WHERE A.sname LIKE '{}' order by B.count1 desc LIMIT 25; "
                                           
 
 #Query to find if workflow has "keep intermin results on"
 db_query_for_keepinterminflag_in_workflow = "select iworkflowid, sinternalname, slabel from xtkworkflow where mdata like '%keepResult=\"true%' and "\
-                                            "sinternalname like {} ;"
+                                            "sinternalname like '{}' ;"
 
 db_query_for_keepinterminflag_in_workflow_acs = "select iworkflowid, sname, slabel from xtkworkflow where mdata like '%keepResult=\"true%' and "\
-                                            "sname like {} ;"
+                                            "sname like '{}' ;"
