@@ -9,7 +9,7 @@ class WorkflowTablesKeepinterminflag:
 
     def __init__(self, campaign_host , build, workflow_internalname):
         self.campaign_host = campaign_host
-        self.build = build
+        self.build = int(build)
         self.workflow_internalname = workflow_internalname
         
     

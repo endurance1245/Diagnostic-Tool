@@ -34,7 +34,7 @@ class WorkflowCountAndWebState:
             result["error"] = str(err)
             return result
         output = int(out)
-        result["No. of workflows running"]  = output - 1
+        result["No. of workflows running"]  = output
         result["state"] = "Ok"
         if output - 1 > workflow_upper_limit:
             result["state"] = "Too many workflows running. Try to reduce them or upgrade the package."
